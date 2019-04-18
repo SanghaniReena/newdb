@@ -1,0 +1,99 @@
+div.listdiv{
+    margin-left: 0.3%;
+    margin-right: -3.6%;
+    padding: 1%;
+}
+div.cardlist{
+    padding: 2%;
+    width: 65%;
+    color: black;
+    background-color: #DCDCDC	;
+    border: none;
+    border-radius:  5%; 
+}
+.btn-secondary{
+    color:none;
+    background-color: none; 
+    border-color:none;
+}
+div button.buttonlist{
+    padding: 0.5%;
+    width: 20%;
+    margin: 0.5% 1.6%;
+    height: 5%;
+    text-align: left;
+    background-color: #DFE3E6;
+    border: none;
+    border-radius:  5%; 
+    box-shadow: 1px 1px 1px rgb(226, 217, 217);
+}
+div button.buttonlist:hover{
+    background-color: #D3D3D3	;
+    cursor: pointer;
+    border: none;
+
+}
+form.listForm{
+    background-color: #D3D3D3;
+    padding: 3%;
+    margin: 1%;
+    font-weight: bold;
+     
+
+}
+button.buttonlist{
+    font-weight: bold
+
+}
+input.inputForm{
+    background-color: white;
+    width: -webkit-fill-available;
+    padding: 1%;
+    margin: 1%;
+
+}
+button.but{
+    background-color: green;
+    align-self: center;
+    color: white;
+    font-weight: bold;
+    width:fit-content;
+    padding: 2% 4%;
+    margin-bottom: 0%;
+     margin: 3%;
+    text-align: center;
+    border-radius: 5%;
+}
+button.but:hover{
+   background-color: green;
+   opacity: 0.8;
+    
+}
+div.popdiv{
+position: absolute;
+    will-change: transform;
+    top: 50px;
+    left: 14px;
+    size: 141%;
+    transform: translate3d(28px, 173px, 0px);
+}
+div.Addcard{
+ color: #6b808c;
+}
+div.Addcard:hover{
+ color: #444749;
+ text-decoration: underline
+}
+div.cardTitle{
+    background-color:white;
+    opacity: 1;
+    padding: 1%;
+    padding-left: 3%;
+    margin: 1%;
+    border-radius: 4%;
+    box-shadow: 3px 3px 3px grey;
+}
+div.cardTitle:hover{
+    background-color:rgb(241, 241, 241);
+    color: rgb(131, 129, 129);
+}

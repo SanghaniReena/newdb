@@ -1,0 +1,27 @@
+.RegForm{
+    display: block;
+    margin:auto;
+}
+.Form{
+    margin: auto;
+    width: 40%;
+    border-style: outset;
+    padding: 2%;
+    margin-top: 5%
+}
+.Header{
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 2%;
+}
+div.navbord{
+    background: white;
+    opacity: 0.5; 
+    border-radius: 9%;
+    padding: 0.5%;
+    margin-left: 0.5%
+}
+div.navbord:hover{
+    cursor: pointer;
+}
+

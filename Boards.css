@@ -1,0 +1,52 @@
+.Sidebar {
+    width: 30%;
+    display: inline-block;
+}
+
+div .card1:hover {
+    color:#026AA7;
+    font-variant-caps: titling-caps;
+    cursor: pointer;
+
+}
+div.divstyle {
+    background-color:"#F5F5F5";
+    padding:"4%";
+    font-weight:"bold";
+
+
+}
+ div.divstyle:hover {
+    background-color:#DCDCDC;	
+    padding: 4%;
+    padding-left: 5%;
+    padding-bottom: 4%;
+    cursor: pointer;
+}
+div.divstyleboard:hover {
+    background-color:black;	
+    opacity: 0.4;
+    cursor: pointer;
+    font-variant-caps: titling-caps;
+    border-radius: 7%
+}
+div.boardnav{
+    font-size: 120%;
+    align-self: center;
+    color: white;
+    margin:1%;
+    padding: 2%;
+    min-width: fit-content;
+    width: max-content
+ }
+ div.boardnav:hover{
+    background-color:black;	
+    opacity: 0.4;
+    border:none;
+    cursor: pointer;
+    font-variant-caps: titling-caps;
+    border-radius: 7%
+ }
+ Form.formclass{
+    padding: 4%;
+ }
