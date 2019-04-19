@@ -154,7 +154,7 @@ app.get("/:id/teams", (req, res) => {
     mysqlConnection.query("SELECT * FROM teams JOIN signup ON signup.iduser = teams.iduser  WHERE teams.iduser=?", [req.params.id], (err, rows) => {
         if (!err) {
             res.send(rows)
-
+            console.log("...", req.params.id)
 
         } else {
             console.log("err...", err)
@@ -196,6 +196,8 @@ app.put("/:idb/editteamboards/:idt", (req, res) => {
             mysqlConnection.query("SELECT * FROM boards WHERE idboards =?", [req.params.idb], (err, rows) => {
                 if (!err) {
                     res.send(rows)
+                    console.log("EDITED TEAMBOARDS..", rows)
+
 
                 } else {
                     console.log("err...", err)
@@ -228,7 +230,6 @@ app.get("/:id/lists", (req, res) => {
     mysqlConnection.query("SELECT * FROM list  WHERE idboards=? ", [req.params.id], (err, rows) => {
         if (!err) {
             res.send(rows)
-            console.log("list", rows)
 
         } else {
             console.log("err...", err)
@@ -276,4 +277,20 @@ app.get("/:idb/cards", (req, res) => {
         }
     })
 
+})
+app.put("/:idl/editcards/:idc", (req, res) => {
+    mysqlConnection.query("UPDATE cards SET idlists=? WHERE idcards=?", [req.params.idl, req.params.idc], (err, result) => {
+        if (!err) {
+            mysqlConnection.query("SELECT * FROM cards WHERE idcards =?", [req.params.idc], (err, rows) => {
+                if (!err) {
+                    res.send(rows)
+
+                } else {
+                    console.log("err...", err)
+                }
+            })
+        } else {
+            console.log("err...", err)
+        }
+    })
 })

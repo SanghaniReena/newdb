@@ -80,7 +80,6 @@ class Navbd extends Component {
         }
     }
     handleCreateBoardEvent = () => {
-        debugger
         const idusers = localStorage.getItem("iduser")
         this.toggleModal();
         const bData = {

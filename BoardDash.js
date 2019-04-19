@@ -12,25 +12,31 @@ import { Popover, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, Uncon
 import "./Boards.css"
 import "./Lists.css"
 import * as teamboardAction from "../action/TeamBoardsAction";
-import { timingSafeEqual } from 'crypto';
-// import { Draggable } from 'react-beautiful-dnd';
+
 class BoardDash extends Component {
-  componentDidUpdate() {
+  componentWillUpdate() {
     const idboards = this.props.location.pathname.slice(7);
-    this.props.action.cardAction.FetchCard(idboards)
+    this.props.action.cardAction.FetchCard(idboards);
+
   }
   componentWillMount() {
     const { history } = this.props;
     const iduser = localStorage.getItem("iduser")
+    this.props.action.teamAction.FetchTeam(iduser)
+
     this.props.action.boardAction.FetchBoard(iduser, history)
     const idboards = this.props.location.pathname.slice(7);
     this.props.action.listAction.FetchList(idboards)
     this.props.action.teamboardAction.FetchiBoard(iduser, idboards)
+    // this.props.action.teamAction.FetchTeam(iduser, idboards)
+
   }
   constructor(props) {
     super(props);
     this.togglep = this.togglep.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.toggleD = this.toggleD.bind(this);
+
     this.toggleModal = this.toggleModal.bind(this)
     this.toggleTModal = this.toggleTModal.bind(this)
     this.state = {
@@ -39,6 +45,7 @@ class BoardDash extends Component {
       isOpenTM: false,
       bTitle: "",
       popoverOpen: false,
+      dropdownOpen: false,
       lName: "",
       iduser: "",
       boards: [],
@@ -59,6 +66,11 @@ class BoardDash extends Component {
       idl: idl
     })
     this.toggleModal()
+  }
+  toggleD() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
   }
   handleCreateCardSubmit = (data) => {
     this.toggleModal()
@@ -106,19 +118,29 @@ class BoardDash extends Component {
     })
   }
   handleChangeTeam = (data) => {
-    debugger;
+
+    this.setState({
+      dropdownOpen: false
+    })
     let idteams = this.state.idteams
     let idboards = data.idboards
-    this.props.action.teamboardAction.EditTBoard(idboards, idteams)
+    const { history } = this.props;
+    this.props.action.teamboardAction.EditTBoard(idboards, idteams, history)
+
   }
 
-  drop = (e) => {
+  onDragStart = (e, idcards) => {
+    e.dataTransfer.setData("idcards", idcards)
+  }
+  onDrop = (e, idlist) => {
+
+    let eidcards = e.dataTransfer.getData("idcards");
+    this.props.action.cardAction.DEditCard(idlist, eidcards)
+
+  }
+  onDragOver = (e) => {
     e.preventDefault();
-    const d = e.dataTransfer.getData("transfer");
-    e.target.appendChild(document.getElementById(d));
-
   }
-
   render() {
     let data = this.props.teamBoardData[0];
     let teamSelect = this.props.teamData.map((teamData, key) => {
@@ -135,18 +157,29 @@ class BoardDash extends Component {
         return teams.idteams === parseInt(iteam, 10)
       })
     }
+
     let listData = this.props.listData.map((listData, key) => {
       return (
-        <div className="col-sm-4" style={{ padding: "7px", width: "100%", marginLeft: "1%", WebkitFlex: "0 0 33.333333%", maxWidth: "23.333333%" }} key={key}>
-          <Card className="card1" body outline color="secondary" style={{ width: "90%", backgroundColor: "#dfe3e6", border: "none", borderRadius: " 6%", boxShadow: "1px 1px 1px grey" }} >
+        <div key={key}
+          className="droppable"
+          onDragOver={(e) => this.onDragOver(e)}
+          style={{ padding: "7px", width: "100%", marginLeft: "1%", WebkitFlex: "0 0 33.333333%", maxWidth: "23.333333%" }}
+          onDrop={(e) => this.onDrop(e, listData.idlist)}>
+          <Card
+            className="card1" body outline color="secondary" style={{ width: "90%", backgroundColor: "#dfe3e6", border: "none", borderRadius: " 6%", boxShadow: "1px 1px 1px grey" }} >
             <CardTitle style={{ fontWeight: " bolder", fontSize: "larger" }}>{listData.lName}</CardTitle>
+
             {this.props.cardData.map((cardData, key) => {
 
               if (listData.idlist === cardData.idlists) {
                 return (
-                  <div key={key} className="cardTitle" id={this.props.id} onDrop={this.drop} onDragOver={this.allowDrop}
-                    style={this.props.style}>
-                    {cardData.cTitle}</div>
+                  <div key={key}
+                    onDragStart={(e) => this.onDragStart(e, cardData.idcards)}
+                    draggable
+                    className="draggable"
+                    onDrop={(e) => this.onDrop(e, cardData.cTitle)}>
+                    <div className="cardTitle"> {cardData.cTitle}</div>
+                  </div>
                 )
               }
               else { return "" }
@@ -179,7 +212,7 @@ class BoardDash extends Component {
             <div className="boardnav">{(data) ? data.bTitle : ""}</div>
             <div style={{ borderLeft: "inset", marginLeft: "1%" }} ></div>
 
-            <UncontrolledDropdown nav inNavbar  >
+            <UncontrolledDropdown nav inNavbar isOpen={this.state.dropdownOpen} toggle={this.toggleD} >
               <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "white", background: "#3487B8", padding: "2%", margin: "1%", marginLeft: "4%", border: "None" }}>
                 <center> {(data) ? ((data.idteams === 0)
                   ? (<div className="boardnav" style={{ marginTop: "5%", padding: "2%", marginLeft: "1%" }}>Personal</div>)
@@ -192,7 +225,7 @@ class BoardDash extends Component {
                   <FormGroup>
                     <Label for="teamselect">This board is a part of..</Label>
                     <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
-                      <option defaultValue="0">Personal boards (No team)</option>
+                      <option value="0">Personal boards (No team)</option>
                       {teamSelect}
                     </Input>
                   </FormGroup>
