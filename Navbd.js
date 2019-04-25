@@ -1,14 +1,17 @@
 import "../view/style.css"
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import { Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarToggler, UncontrolledDropdown } from 'reactstrap';
-import { Button, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, Label, ModalHeader } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { bindActionCreators } from "redux";
 import * as boardAction from "../action/BoardsAction";
 import * as teamAction from "../action/TeamsAction"
 import * as userAction from "../action/UserRegAction"
-const createI = require("../img/createi.png");
+
+
+const plus = require("../img/plus.png");
 const trelloIcon = require("../img/trellologo.png");
 class Navbd extends Component {
 
@@ -173,7 +176,7 @@ class Navbd extends Component {
                             <Nav className="ml-auto" navbar>
                                 <UncontrolledDropdown nav inNavbar>
                                     <DropdownToggle nav style={{ color: "white", fontWeight: "bold", background: "white", opacity: "0.5", borderRadius: "9%" }}>
-                                        <img height="28px" width="28px" src={createI} alt="" style={{ color: "white" }}></img>
+                                        <img height="28px" width="28px" src={plus} alt="" style={{ fill : "white"}}></img>
                                     </DropdownToggle>
                                     <DropdownMenu right>
                                         <DropdownItem style={{ textAlign: "center" }} header>Create</DropdownItem>

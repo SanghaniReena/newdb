@@ -1,6 +1,7 @@
-import { ADD_CARD, FAILED, FETCH_CARD, EDITD_CARD } from "../action/CardsAction"
+import { ADD_CARD, FAILED, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS } from "../action/CardsAction"
 const INITIAL_STATE = {
-    cards: []
+    cards: [],
+    cardDetails: []
 }
 const handleCards = (state = INITIAL_STATE, action) => {
 
@@ -25,6 +26,15 @@ const handleCards = (state = INITIAL_STATE, action) => {
                         return cards.idlists === idlists ? action.data : cards;
                     })
                 });
+            }
+        case ADD_COMMENT:
+            {
+                const newdata = state.cardDetails.concat(action.data);
+                return Object.assign({}, state, { cardDetails: newdata })
+            }
+        case FETCH_CARD_DETAILS:
+            {
+                return Object.assign({}, state, { cardDetails: action.data })
             }
         case FAILED:
             {

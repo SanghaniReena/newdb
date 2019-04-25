@@ -53,6 +53,11 @@ export function cardsname(id) {
     return BaseService.get("/" + id + '/cards');
 }
 export function editdcardsname(idlists, idcards) {
-
     return BaseService.put("/" + idlists + '/editcards/' + idcards);
+}
+export function AddComment(data) {
+    return BaseService.post("/cardscomment",data);
+}
+export function fetchCardDetails(id) {
+    return BaseService.post("/"+id+"/carddetails");
 }

@@ -5,7 +5,7 @@ export const FETCH_LIST = "FETCH_LIST";
 export const FAILED = "FAILED";
 
 export const AddList = (data) => {
-
+debugger
     return (dispatch) => {
         authService.lists(data)
             .then((response) => {

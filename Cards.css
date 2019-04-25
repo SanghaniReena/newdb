@@ -1,0 +1,84 @@
+div.cmMainDiv{
+    /* margin: 5%; */
+    padding: 2.5%;
+    /* size: 80%; */
+    min-height: 520px;
+    min-width: 750px;
+    
+}
+div.cmTitle{
+    font-size: 17px;
+    font-weight:bold;
+    margin-top: 4%;
+}
+div a.cmSubTitle{
+    text-decoration: underline;
+   
+}
+div a.cmSubTitle:hover{
+    cursor: pointer;
+    color: black;
+}
+div.cmsubFont{
+color:#6B8086;
+margin-bottom: 2%;
+margin-left: 35px;
+
+}
+div.cmAddDesc{
+    min-width:500px;
+    border:none;
+    padding: 2%;
+    padding-top: 1%;
+    margin-left: 35px;
+    min-height: 60px;
+    border-radius: 2%;
+    background: #ebeef0;
+}
+div.cmAddDesc:hover{
+background: #e0e2e4;
+}
+div.cmSubDiv1{
+    float: left;
+}
+div.cmSubDiv2{
+    float: right;
+    margin-top: 3%;
+    margin-left: 32px;
+}
+div.cmbTitle{
+    color:#6B8086;
+    margin-top: 10%;
+    margin-bottom: -5%
+}
+div.cmbtn{
+    background-color: #ebeef0;
+    box-shadow: 0 1px 0 0 rgba(9,45,66,.13);
+    border: none;
+    border-radius: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    font-weight: 700;
+    height: 32px;
+    width: 130px;
+    margin-top: 8px;
+    max-width: 300px;
+    overflow: hidden;
+    padding: 6px 8px;
+    position: relative;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    transition-property: background-color,border-color,box-shadow;
+    transition-duration: 85ms;
+    transition-timing-function: ease;
+
+}
+div.cmbtn:hover{
+    background: #e0e2e4;
+}

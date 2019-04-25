@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
-import { Card, CardTitle, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import * as boardAction from "../action/BoardsAction"
-import * as listAction from "../action/ListsAction"
-import * as teamAction from "../action/TeamsAction"
-import * as cardAction from "../action/CardsAction"
-import Navbd from './Navbd';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
-import { Popover, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, UncontrolledDropdown } from 'reactstrap';
 import "./Boards.css"
 import "./Lists.css"
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Card, CardTitle, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, Popover, UncontrolledDropdown } from 'reactstrap';
+import { bindActionCreators } from "redux";
+import * as boardAction from "../action/BoardsAction"
+import * as cardAction from "../action/CardsAction"
+import * as listAction from "../action/ListsAction"
 import * as teamboardAction from "../action/TeamBoardsAction";
+import * as teamAction from "../action/TeamsAction"
+import Cards from "./Cards";
+import Navbd from './Navbd';
+
 
 class BoardDash extends Component {
   componentWillUpdate() {
@@ -19,6 +22,17 @@ class BoardDash extends Component {
     this.props.action.cardAction.FetchCard(idboards);
 
   }
+  // componentDidUpdate(){
+  //   const idboards = this.props.location.pathname.slice(7);
+  //   this.props.action.cardAction.FetchCard(idboards);
+  // }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return this.state.value !== nextState.value;
+  // }
+  // componentDidMount(){
+  //   const idboards = this.props.location.pathname.slice(7);
+  //   this.props.action.cardAction.FetchCard(idboards);
+  // }
   componentWillMount() {
     const { history } = this.props;
     const iduser = localStorage.getItem("iduser")
@@ -29,17 +43,19 @@ class BoardDash extends Component {
     this.props.action.listAction.FetchList(idboards)
     this.props.action.teamboardAction.FetchiBoard(iduser, idboards)
     // this.props.action.teamAction.FetchTeam(iduser, idboards)
-
+  //  this.props.action.cardAction.FetchCard(idboards);
   }
   constructor(props) {
     super(props);
     this.togglep = this.togglep.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleD = this.toggleD.bind(this);
-
     this.toggleModal = this.toggleModal.bind(this)
+
+    // this.toggleCM = this.toggleCM.bind(this)
     this.toggleTModal = this.toggleTModal.bind(this)
     this.state = {
+      open:false,
       isOpen: false,
       isOpenM: false,
       isOpenTM: false,
@@ -51,6 +67,7 @@ class BoardDash extends Component {
       boards: [],
       tName: "",
       tDesc: "",
+      idboards: "",
       idteams: 0,
       teams: [],
       auth: true,
@@ -61,6 +78,16 @@ class BoardDash extends Component {
       isOpen: !prevState.isOpen
     }));
   }
+  onOpenModal = (idcards) => {
+    this.setState({ open: true ,
+    idcards:idcards});
+  
+  };
+
+  onCloseModal = () => {
+    
+    this.setState({ open: false });
+  };
   handleCardClick = (idl) => {
     this.setState({
       idl: idl
@@ -73,24 +100,26 @@ class BoardDash extends Component {
     });
   }
   handleCreateCardSubmit = (data) => {
-    this.toggleModal()
+    this.toggleModal();
     const cardData = {
       cTitle: this.state.cTitle,
       idlists: this.state.idl,
       idboards: data.idboards,
       idteams: data.idteams,
-      iduser: data.iduser,
+      iduser: data.iduser
     }
     this.props.action.cardAction.AddCard(cardData)
   }
   handleAddClick = (data) => {
+    debugger
+    // e.preventDefault();
     const listData = {
       lName: this.state.lName,
       iduser: data.iduser,
       idboards: data.idboards,
       idteams: data.idteams
     }
-    this.props.action.listAction.AddList(listData)
+    this.props.action.listAction.AddList(listData);
   }
   toggle() {
     this.setState({
@@ -106,6 +135,18 @@ class BoardDash extends Component {
     this.setState({
       isOpenTM: !this.state.isOpenTM
     });
+  }
+  enterPress(data, e) {
+    if (e.key === "Enter") {
+      const cardData = {
+        cTitle: this.state.cTitle,
+        idlists: this.state.idl,
+        idboards: data.idboards,
+        idteams: data.idteams,
+        iduser: data.iduser
+      }
+      this.props.action.cardAction.AddCard(cardData)
+    }
   }
   handleOnChange = (key, e) => {
     this.setState({
@@ -141,7 +182,12 @@ class BoardDash extends Component {
   onDragOver = (e) => {
     e.preventDefault();
   }
+  handleClickOnCard=()=>{
+
+    this.toggleCM()
+  }
   render() {
+    
     let data = this.props.teamBoardData[0];
     let teamSelect = this.props.teamData.map((teamData, key) => {
       return (
@@ -165,19 +211,18 @@ class BoardDash extends Component {
           onDragOver={(e) => this.onDragOver(e)}
           style={{ padding: "7px", width: "100%", marginLeft: "1%", WebkitFlex: "0 0 33.333333%", maxWidth: "23.333333%" }}
           onDrop={(e) => this.onDrop(e, listData.idlist)}>
-          <Card
-            className="card1" body outline color="secondary" style={{ width: "90%", backgroundColor: "#dfe3e6", border: "none", borderRadius: " 6%", boxShadow: "1px 1px 1px grey" }} >
-            <CardTitle style={{ fontWeight: " bolder", fontSize: "larger" }}>{listData.lName}</CardTitle>
+          <Card className="card1" body outline color="secondary"
+           style={{ width: "90%", backgroundColor: "#dfe3e6", border: "none", borderRadius: " 6%", boxShadow: "1px 1px 1px grey" }} >
+            <CardTitle style={{ fontWeight: " bolder", fontSize: "larger"  }}>{listData.lName}</CardTitle>
 
             {this.props.cardData.map((cardData, key) => {
-
               if (listData.idlist === cardData.idlists) {
                 return (
                   <div key={key}
                     onDragStart={(e) => this.onDragStart(e, cardData.idcards)}
                     draggable
                     className="draggable"
-                    onDrop={(e) => this.onDrop(e, cardData.cTitle)}>
+                    onDrop={(e) => this.onDrop(e, cardData.cTitle)} onClick={()=>this.onOpenModal(cardData.idcards)} >
                     <div className="cardTitle"> {cardData.cTitle}</div>
                   </div>
                 )
@@ -193,10 +238,11 @@ class BoardDash extends Component {
     return (
       <div>
         <Navbd></Navbd>
+        <Cards open={this.state.open} onClose={this.onCloseModal} idcards={this.state.idcards}></Cards>
         <Modal isOpen={this.state.isOpenM} toggle={this.toggleModal}>
           <ModalBody>
             <ModalHeader toggle={this.toggleModal}>Add card </ModalHeader>
-            <Form>
+            <Form onKeyPress={this.enterPress.bind(this, data)}>
               <FormGroup>
                 <Input type="text" name="cTitle" id="cTitle" placeholder="Enter a title for this card.." onChange={(e) => this.handleOnChange("cTitle", e)} />
               </FormGroup>
@@ -260,7 +306,7 @@ class BoardDash extends Component {
             <Popover style={{ width: "max-content" }} placement="bottom" isOpen={this.state.isOpen} target="Popover1" toggle={this.togglep}>
               <form className="listForm">
                 <input max="25" className="inputForm" type="text" name="lName" id="lName" placeholder="Add list Title" onChange={(e) => this.handleOnChangelist("lName", e)} />
-                <button className="but" onClick={this.handleAddClick.bind(this, data)}>Add List</button>
+                <button className="but" onClick={(e)=>this.handleAddClick(data,e)}>Add List</button>
               </form>
             </Popover>
           </div>
