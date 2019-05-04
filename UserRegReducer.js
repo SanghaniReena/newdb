@@ -1,17 +1,4 @@
-import {
-
-
-
-    FAILED,
-
-    FETCH_USERS,
-
-    LOGOUT,
-
-    USER_LOGIN,
-
-    USER_REG
-} from "../action/UserRegAction"
+import {FAILED,FETCH_USERS,LOGOUT,USER_LOGIN,USER_REG} from "../action/UserRegAction"
 
 const INITIAL_STATE = {
     users: [],

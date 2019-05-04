@@ -8,6 +8,7 @@ import * as cardAction from "../action/CardsAction"
 import * as listAction from "../action/ListsAction"
 import * as teamboardAction from "../action/TeamBoardsAction";
 import * as teamAction from "../action/TeamsAction"
+import BoardDash from "./BoardDash";
 
 const move = require("../img/move.png");
 const duedate = require("../img/duedate.png");
@@ -19,7 +20,8 @@ const description = require("../img/description.png");
 const comments = require("../img/comments.png");
 const activity = require("../img/activity.png");
 const close = require("../img/close.png");
-
+const refresh = require("../img/refresh.png")
+const remove = require("../img/remove.png")
 
 class Cards extends Component {
     constructor(props) {
@@ -27,20 +29,30 @@ class Cards extends Component {
         this.ESCAPE_KEY = 27;
         this.ENTER_KEY = 13;
         this.state = {
-            editText: "reena",
+            editText: "",
             editing: false,
-            show:false,
-            comment:"",
-            idcards:0
+            show: false,
+            comment: "",
+            cDesc: props.cardDetails.cDesc,
+            idcards: 0,
+            showStb: false,
+            showDel: false
         };
     }
-   componentWillUpdate(){
+    // componentWillMount() {
+    //     debugger
+    //     const idcards = localStorage.getItem("cardid")
+    //     if(idcards){
+    //         this.props.action.cardAction.FetchCardComments(idcards)
+    //         this.props.action.cardAction.FetchCardDetails(idcards)
+    //     }
 
-   }
-    handleEdit(e) {
+    // }
+    handleEdit = (e) => {
+
         return (e) => this.setState({
             editing: !this.state.editing,
-            show:!this.state.show
+            show: true
         });
     }
 
@@ -48,11 +60,11 @@ class Cards extends Component {
         this.setState({ editText: e.target.value });
     }
 
-    handleOnChange=(key,e)=>{
+    handleOnChange = (key, e) => {
         this.setState({
-            [key]:e.target.value
+            [key]: e.target.value
         })
-        
+
     }
     handleSubmit(e) {
         var val = this.state.editText.trim();
@@ -61,21 +73,49 @@ class Cards extends Component {
                 editText: val,
                 editing: false,
             });
-            
         }
     }
-    handleCommSubmit=(id,e)=>{
-    e.preventDefault();
-        this.setState({
-            show:!this.state.show
-        })
-        const carddetails={
-            idcards:id,
-            cComment:this.state.comment            
+    handleCommSubmit = (id, e) => {
+        e.preventDefault()
+        this.refs.form.reset();
+        const carddetails = {
+            idcards: id,
+            cComment: this.state.comment
         }
-        this.props.action.cardAction.AddComment(carddetails)
-    }
 
+        this.props.action.cardAction.AddComment(carddetails)
+        this.setState({
+            comment: ""
+        })
+
+    }
+    handleDescSubmit = (id, e) => {
+        this.setState({
+            show: !this.state.show
+        })
+        const carddetails = {
+            idcards: id,
+            cDesc: this.state.cDesc
+        }
+        this.props.action.cardAction.AddDesc(carddetails)
+    }
+    handleDescEdit = (id, e) => {
+        this.setState({
+            show: !this.state.show
+        })
+        if (this.state.cDesc === "") {
+            this.setState({
+                cDesc: this.props.cardDetails.cDesc
+            })
+
+
+        }
+        const carddetails = {
+            idcards: id,
+            cDesc: this.state.cDesc
+        }
+        this.props.action.cardAction.EditDesc(carddetails)
+    }
     handleKeyDown(e) {
         if (e.which === this.ESCAPE_KEY) {
             this.setState({
@@ -86,7 +126,43 @@ class Cards extends Component {
             this.handleSubmit(e);
         }
     }
+    handleSTBClick = (idcards) => {
+        this.setState({
+            showDel: !this.state.showDel,
+            isArch:0
+        })
+        this.props.action.cardAction.SendtbCard(idcards)
+        
+    }
+    handleDeleteClick = (idcards) => {
+        this.props.action.cardAction.DeleteCard(idcards)
+    }
+    handleCancel = () => {
+        this.setState({
+            show: !this.state.show
+        })
+    }
+    handleCancelc = (e) => {
+        e.preventDefault();
+        this.refs.form.reset();
+    }
+    handlearchive = (idcards) => {
+        this.props.action.cardAction.ArchiveCard(idcards)
+    }
+    handleArchiveClick = (idcards) => {
+        debugger
+        this.setState({
+            showDel: !this.state.showDel,
+            isArch:1
+        })
+        this.props.action.cardAction.ArchiveCard(idcards)
+      
+    }
+    
+    
     render() {
+
+        const userName = localStorage.getItem("userName");
         let singleCard = []
         if (this.props.cardData.length > 0) {
             singleCard = this.props.cardData.filter((cards) => {
@@ -102,46 +178,84 @@ class Cards extends Component {
                 })
             }
         }
+        let cComments = []
+
+        cComments = this.props.cardComment.map((cardComment, key) => {
+            return (
+                <div key={key}><div className="cmCommTitle">{userName}</div>
+                    {cardComment.cComment ? <div className="cmSubcomm">{cardComment.cComment}</div> : ""}
+                    <div className="cmSubdel"><div>delete</div></div>
+                </div>
+            )
+        })
+
         return (
+
             <Modal open={this.props.open} onClose={this.props.onClose} idcards={this.props.idcards} center>
                 <div className="cmMainDiv" >
                     <div className="cmSubDiv1">
-                        <div className="cmTitle" ><img alt="" height="30px" width="30px" src={copy} style={{ marginRight: "5px" }} />{(singleCard.length > 0) ? singleCard[0].cTitle : ""}</div>
+                        <div className="cmTitle" ><img alt="" height="30px" width="30px" src={copy} style={{ marginRight: "5px" }} />{(singleCard.length > 0)
+                            ? singleCard[0].cTitle
+                            : (this.props.archived[0] ? this.props.archived[0].cTitle : "")}</div>
                         <div className="cmsubFont">in list <a href="xx" className="cmSubTitle" style={{ textDecoration: "underline" }}>
-                            {(singlelist.length > 0) ? singlelist[0].lName : "undefine"}</a></div>
+                            {(singlelist.length > 0) ?
+                                singlelist[0].lName
+                                : (this.props.archived[0] ? this.props.archived[0].lName : "")}</a></div>
                         <div>
                             <div className="cmTitle"><img alt="" height="30px" width="30px" src={description} style={{ marginRight: "5px" }} />Description</div>
-                            {!this.state.show? <label type="text" className={this.state.editing ? 'hidden' : ''} onClick={this.handleEdit()}><div className="cmAddDesc"> {this.state.editText}</div></label>
-                            :
-                            <form>
-                            <textarea style={{ borderColor: "lightgrey", minWidth: "500px", minHeight: "60px", marginLeft: "35px" }} 
-                                className={this.state.editing ? '' : 'hidden'}
-                                value={this.state.editText}
-                                onChange={this.handleChange.bind(this)}
-                                onBlur={this.handleSubmit.bind(this)}
-                                onKeyDown={this.handleKeyDown.bind(this)}
-                            />
-                            <br></br>
-                            <button style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%",marginTop:"5px" }}>{" "}Save{" "} </button>
-                            <img alt="" height="23px" width="23px" src={close} style={{ marginLeft: "3px" }}/>
-                            </form>}
+                            {this.state.show ?
+                                (!this.props.cardDetails.length > 0 ?
+                                    <form >
+                                        <textarea style={{ borderColor: "lightgrey", minWidth: "500px", minHeight: "60px", marginLeft: "35px" }}
+                                            value={this.props.editText}
+                                            onChange={(e) => this.handleOnChange("cDesc", e)}
+                                        />
+                                        <br></br>
+                                        <button
+                                            onClick={(e) => this.handleDescSubmit(this.props.idcards, e)}
+                                            style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%", marginTop: "5px" }}>{" "}Save{" "} </button>
+                                        <img alt="" height="23px" width="23px" src={close} style={{ marginLeft: "3px" }} onClick={this.handleCancel.bind(this)} /></form>
+                                    :
+                                    (<form >
+                                        <textarea style={{ borderColor: "lightgrey", minWidth: "500px", minHeight: "60px", marginLeft: "35px" }}
+                                            defaultValue={this.props.cardDetails[0].cDesc}
+                                            onChange={(e) => this.handleOnChange("cDesc", e)}
+                                        />
+                                        <br></br>
+                                        <button
+
+                                            onClick={(e) => this.handleDescEdit(this.props.idcards, e)}
+                                            style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%", marginTop: "5px" }}>{" "}Save{" "} </button>
+                                        <img alt="" height="23px" width="23px" src={close} style={{ marginLeft: "3px" }} onClick={this.handleCancel.bind(this)} /></form>)
+                                )
+
+                                :
+                                (this.props.cardDetails.length > 0 ?
+                                    <label type="text" onClick={this.handleEdit()}><div className="cmAddDesc"> {this.props.cardDetails[0].cDesc}</div></label>
+                                    :
+                                    <label type="text" onClick={this.handleEdit()}><div className="cmAddDesc">Add a more detailed description…</div></label>)
+                            }
                         </div>
                         <div>
                             <div className="cmTitle" ><img alt="" height="30px" width="30px" src={comments} style={{ marginRight: "5px" }} />Add Comment</div>
-                            <form>
+                            <form onSubmit={this.handleCommSubmit} ref="form">
                                 <div className="commDiv">
-                                <textarea type="text" placeholder="Write a comment…" 
-                                onChange={(e)=>this.handleOnChange("comment",e)}
-                                style={{ borderColor: "lightgrey", minWidth: "500px", minHeight: "60px", marginLeft: "35px" }} />
+                                    <textarea type="text" placeholder="Write a comment…"
+                                        onChange={(e) => this.handleOnChange("comment", e)}
+                                        style={{ borderColor: "lightgrey", minWidth: "500px", minHeight: "60px", marginLeft: "35px" }} />
                                 </div>
-                                <button 
-                                onClick={(e)=>this.handleCommSubmit(this.props.idcards,e)}
-                                style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%" }}>{" "}Save{" "} </button>
+                                <button
+                                    disabled={!this.state.comment}
+                                    onClick={(e) => this.handleCommSubmit(this.props.idcards, e)}
+                                    style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%" }}>{" "}Save{" "} </button>
+                                <img
+                                    disabled={!this.state.comment} alt="" height="23px" width="23px" src={close} style={{ marginLeft: "3px" }} onClick={this.handleCancelc.bind(this)} />
                             </form>
                         </div>
-                        <div>
+                        <div className="commentMain">
                             <div className="cmTitle" ><img alt="" height="30px" width="30px" src={activity} style={{ marginRight: "5px" }} />Activity</div>
                         </div>
+                        <div >{cComments}</div>
                     </div>
                     <div className="cmSubDiv2">
                         <div className="cmbTitle">Add To Card</div>
@@ -149,9 +263,14 @@ class Cards extends Component {
                         <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={duedate} style={{ marginRight: "3px" }} />Due Date</div></div>
                         <div className="cmbTitle">Action</div>
                         <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={move} style={{ marginRight: "3px" }} />Move</div></div>
-                        <div className="cmbtn"><div><img alt=""  height="20px" width="20px" src={copy} style={{ marginRight: "3px" }} />Copy</div></div>
-                        <div className="cmbtn"><div><img alt=""  height="20px" width="20px" src={watch} style={{ marginRight: "3px" }} />Watch</div></div>
-                        <div className="cmbtn"><div><img alt=""  height="20px" width="20px" src={archive} style={{ marginRight: "3px" }} />Archive</div></div>
+                        <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={copy} style={{ marginRight: "3px" }} />Copy</div></div>
+                        <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={watch} style={{ marginRight: "3px" }} />Watch</div></div>
+                        {!this.state.showDel
+                            ? <div className="cmbtn" onClick={this.handleArchiveClick.bind(this, this.props.idcards)}><div><img alt="" height="20px" width="20px" src={archive} style={{ marginRight: "3px" }} />Archive</div></div>
+                            : (<div><div className="cmbtn" onClick={this.handleSTBClick.bind(this,this.props.idcards)}><div><img alt="" height="20px" width="20px" src={refresh} style={{ marginRight: "3px" }} />Send to board</div></div>
+                                <div className="cmbtn1" onClick={this.handleDeleteClick.bind(this,this.props.idcards)}><div><img alt="" height="20px" width="20px" src={remove} style={{ marginRight: "3px" }} />Delete</div></div></div>)
+                        }
+
                     </div>
                 </div>
             </Modal>
@@ -165,7 +284,10 @@ const mapStateToProps = (state) => {
         teamData: state.TeamReducer.teams,
         listData: state.ListsReducer.lists,
         teamBoardData: state.TeamBoardsReducer.teamboards,
-        cardData: state.CardsReducer.cards
+        cardData: state.CardsReducer.cards,
+        cardComment: state.CardsReducer.cardComment,
+        cardDetails: state.CardsReducer.cardDetails,
+        archived: state.CardsReducer.archived
 
     }
 }
@@ -177,5 +299,6 @@ const mapDispatchToProps = (dispatch) => ({
         teamboardAction: bindActionCreators(teamboardAction, dispatch),
         cardAction: bindActionCreators(cardAction, dispatch)
     }
+    // return bindActionCreators({boardAction,teamAction,listAction,teamboardAction,cardAction},dispatch)
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Cards); 

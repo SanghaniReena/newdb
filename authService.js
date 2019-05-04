@@ -49,15 +49,40 @@ export function listname(id) {
 export function cards(data) {
     return BaseService.post('/cards', data);
 }
+export function deletecards(id) {
+    return BaseService.delete('/'+id+'/cardsdel');
+}
+
 export function cardsname(id) {
     return BaseService.get("/" + id + '/cards');
 }
 export function editdcardsname(idlists, idcards) {
+    
     return BaseService.put("/" + idlists + '/editcards/' + idcards);
 }
-export function AddComment(data) {
+export function AddComment(data) {  
     return BaseService.post("/cardscomment",data);
 }
+export function fetchCardComments(id) {
+    debugger
+    return BaseService.get("/"+id+"/cardcomments");
+}
 export function fetchCardDetails(id) {
-    return BaseService.post("/"+id+"/carddetails");
+    return BaseService.get("/"+id+"/carddetails");
+}
+export function AddDesc(data) {
+   
+    return BaseService.post("/cardsdesc",data);
+}
+export function EditDesc(data) {
+   
+    return BaseService.post("/cardseditdesc",data);
+}
+export function archiveCard(id) {
+   
+    return BaseService.post("/"+id+"/archivecard");
+}
+export function stbCard(id) {
+   
+    return BaseService.post("/"+id+"/sendtb");
 }
