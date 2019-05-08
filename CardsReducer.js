@@ -1,4 +1,4 @@
-import { ADD_CARD, FAILED, ARCHIVE_CARD, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
+import { ADD_CARD, FAILED, ARCHIVE_CARD,DELETE_CARD_COMM, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
 const INITIAL_STATE = {
     cards: [],
     cardDetails: [],
@@ -22,7 +22,7 @@ const handleCards = (state = INITIAL_STATE, action) => {
             }
         case ARCHIVE_CARD:
             {
-                debugger;
+                ;
                 var index;
                 for (let i = 0; i < state.cards.length; i++) {
                     if (state.cards[i].idcards === action.data[0].idcards) {
@@ -49,7 +49,7 @@ const handleCards = (state = INITIAL_STATE, action) => {
             }
         case EDITD_CARD:
             {
-                debugger
+                
                 console.log(action.data);
                 console.log(state.cards)
                 for (let i = 0; i < state.cards.length; i++) {
@@ -86,18 +86,22 @@ const handleCards = (state = INITIAL_STATE, action) => {
                 const newData = state.cardDetails.concat(action.data[0]);
                 return Object.assign({}, state, { cardDetails: newData })
 
-               
             }
         // case DELETE_CARD:{
 
         // }
+        case DELETE_CARD_COMM:
+        {
+            console.log("deleted comm",action.data);
+            break;
+        }
         case FETCH_CARD_DETAILS:
             {
                 return Object.assign({}, state, { cardDetails: action.data })
             }
         case FETCH_CARD_COMMENTS:
             {
-                debugger
+                
                 return Object.assign({}, state, { cardComment: action.data })
             }
         case FAILED:

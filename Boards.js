@@ -41,9 +41,16 @@ class Boards extends Component {
   }
 
   handleOnclickCard = (id) => {
+   
+    const iduser = localStorage.getItem("iduser")
+    if (iduser === null) {
+      this.props.history.push("/login")
+    }else{
     this.props.history.push("/board/" + id)
+    }
   }
   handleCreateBoardEvent = () => {
+    
     const idusers = localStorage.getItem("iduser")
     this.toggleModal();
     const bData = {
@@ -51,7 +58,10 @@ class Boards extends Component {
       bTitle: this.state.bTitle,
       idteams: this.state.idteams
     }
-    this.props.action.boardAction.AddBoard(bData)
+    const {history}=this.props
+    console.log("...",this.state.idboards)
+    this.props.action.boardAction.AddBoard(bData,history)
+    
   }
 
   render() {
@@ -93,7 +103,7 @@ class Boards extends Component {
             </Form>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
+            <Button color="primary" disabled={this.state.bTitle===""} onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
           </ModalFooter>
         </Modal>

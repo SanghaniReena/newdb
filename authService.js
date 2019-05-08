@@ -64,7 +64,7 @@ export function AddComment(data) {
     return BaseService.post("/cardscomment",data);
 }
 export function fetchCardComments(id) {
-    debugger
+    
     return BaseService.get("/"+id+"/cardcomments");
 }
 export function fetchCardDetails(id) {
@@ -85,4 +85,8 @@ export function archiveCard(id) {
 export function stbCard(id) {
    
     return BaseService.post("/"+id+"/sendtb");
+}
+export function deletecomm(id) {
+   
+    return BaseService.delete("/"+id+"/delcomt");
 }

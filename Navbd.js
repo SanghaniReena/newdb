@@ -91,7 +91,9 @@ class Navbd extends Component {
             idteams: this.state.idteams
 
         }
-        this.props.action.boardAction.AddBoard(bData)
+        console.log("...",this.state.idboards)
+        const {history}=this.props
+        this.props.action.boardAction.AddBoard(bData,history)
 
     }
     handlnavboardClick = () => {
@@ -143,7 +145,7 @@ class Navbd extends Component {
                             </Form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
+                            <Button color="primary"  disabled={this.state.bTitle===""} onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         </ModalFooter>
                     </Modal>
@@ -163,7 +165,7 @@ class Navbd extends Component {
                             </Form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onClick={this.handleCreateTeamEvent.bind(this)}>Create</Button>{' '}
+                            <Button color="primary" disabled={this.state.tName===""} onClick={this.handleCreateTeamEvent.bind(this)}>Create</Button>{' '}
                             <Button color="secondary" onClick={this.toggleTModal}>Cancel</Button>
                         </ModalFooter>
                     </Modal>

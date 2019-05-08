@@ -53,10 +53,13 @@ class TeamBoards extends Component {
             idteams: this.state.idteams
         }
         if (this.state.idteams === 0) {
-            this.props.action.boardAction.AddBoard(TbData)
+            const { history } = this.props
+            // console.log("...",this.state.idboards)
+            this.props.action.boardAction.AddBoard(TbData, history)
         }
         else {
-            this.props.action.teamboardAction.AddTBoard(TbData)
+            const { history } = this.props
+            this.props.action.teamboardAction.AddTBoard(TbData, history)
         }
     }
 
@@ -99,7 +102,7 @@ class TeamBoards extends Component {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
+                        <Button color="primary" disabled={this.state.bTitle === ""} onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>

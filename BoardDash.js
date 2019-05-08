@@ -48,7 +48,7 @@ class BoardDash extends Component {
       idteams: 0,
       teams: [],
       auth: true,
-      isArch:0
+      isArch: 0
     };
     this.togglep = this.togglep.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -74,13 +74,13 @@ class BoardDash extends Component {
   onCloseModal = () => {
     //const cardid=localStorage.getItem("cardid")
     localStorage.removeItem("cardid");
-debugger
+
     this.setState({
       open: false,
     });
-    
-      this.props.action.cardAction.DeleteCard(this.state.idcards)
-    
+
+    this.props.action.cardAction.DeleteCard(this.state.idcards)
+
   };
 
   handleCardClick = (idl) => {
@@ -184,10 +184,9 @@ debugger
 
     this.toggleCM()
   }
-  isArchCard=(isArch)=>{
-    debugger
+  isArchCard = (isArch) => {
     this.setState({
-      isArch:isArch
+      isArch: isArch
     })
   }
   render() {
@@ -313,7 +312,7 @@ debugger
             <Popover style={{ width: "max-content" }} placement="bottom" isOpen={this.state.isOpen} target="Popover1" toggle={this.togglep}>
               <form className="listForm">
                 <input max="25" className="inputForm" type="text" name="lName" id="lName" placeholder="Add list Title" onChange={(e) => this.handleOnChangelist("lName", e)} />
-                <button className="but" onClick={(e) => this.handleAddClick(data, e)}>Add List</button>
+                <button className="but" disabled={this.state.lName === ""} onClick={(e) => this.handleAddClick(data, e)}>Add List</button>
               </form>
             </Popover>
           </div>

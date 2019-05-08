@@ -9,8 +9,9 @@ export const ADD_DESC = "ADD_DESC";
 export const FETCH_CARD_COMMENTS = "FETCH_CARD_COMMENTS";
 export const EDIT_DESC = "EDIT_DESC";
 export const DELETE_CARD = "DELETE_CARD";
-export const ARCHIVE_CARD = "ARCHIVE_CARD"
-export const SENDTB_CARD="SENDTB_CARD"
+export const ARCHIVE_CARD = "ARCHIVE_CARD";
+export const DELETE_CARD_COMM="DELETE_CARD_COMM"
+export const SENDTB_CARD="SENDTB_CARD";
 export const AddCard = (data) => {
 
     return (dispatch) => {
@@ -31,7 +32,7 @@ export const AddCard = (data) => {
     }
 }
 export const DeleteCard = (id) => {
-    debugger
+    
     return (dispatch) => {
         authService.deletecards(id)
             .then((response) => {
@@ -70,7 +71,7 @@ export const FetchCard = (id) => {
     }
 }
 export const DEditCard = (idlists, idcards) => {
-    debugger
+    
     return (dispatch) => {
         authService.editdcardsname(idlists, idcards)
             .then((response) => {
@@ -130,7 +131,7 @@ export const AddDesc = (data) => {
     }
 }
 export const EditDesc = (data) => {
-    debugger
+    
     return (dispatch) => {
         authService.EditDesc(data)
             .then((response) => {
@@ -173,7 +174,7 @@ export const FetchCardDetails = (id) => {
     }
 }
 export const FetchCardComments = (id) => {
-    debugger
+    
     return (dispatch) => {
         authService.fetchCardComments(id)
             .then((response) => {
@@ -193,7 +194,7 @@ export const FetchCardComments = (id) => {
     }
 }
 export const ArchiveCard = (id) => {
-    debugger
+    
     return (dispatch) => {
 
         authService.archiveCard(id)
@@ -214,7 +215,7 @@ export const ArchiveCard = (id) => {
     }
 }
 export const SendtbCard = (id) => {
-    debugger
+    
     return (dispatch) => {
 
         authService.stbCard(id)
@@ -224,6 +225,25 @@ export const SendtbCard = (id) => {
                     dispatch({
                         type: SENDTB_CARD,
                         data: response.data
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+export const deleteComm = (id) => {
+    
+    return (dispatch) => {
+        authService.deletecomm(id)
+            .then((response) => {
+                if (response.status === 200) {
+                    dispatch({
+                        type: DELETE_CARD_COMM,
+                        data: response.data,
                     });
                 }
             })

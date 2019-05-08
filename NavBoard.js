@@ -43,7 +43,6 @@ class NavBoard extends Component {
     }
     render() {
         const id = this.props.location.pathname.slice(7);
-        console.log("props..", id)
         let data = "";
         if (this.props.boardData && this.props.boardData.length > 0) {
             data = this.props.boardData.filter((board) => {

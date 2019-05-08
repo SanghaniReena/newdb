@@ -34,6 +34,7 @@ class NavbarInside extends Component {
       idteams: 0,
       teams: [],
       auth: true,
+      
     };
   }
   componentDidMount = () => {
@@ -90,14 +91,30 @@ class NavbarInside extends Component {
   handleCreateBoardEvent = () => {
 
     const idusers = localStorage.getItem("iduser")
-    this.toggleModal();
+    if(this.state.isValid===true){
+    this.toggleModal();}
     const bData = {
       iduser: idusers,
       bTitle: this.state.bTitle,
       idteams: this.state.idteams
     }
+    if(this.state.bTitle===""){
+      this.setState({
+        isValid:false,
+        valMsg:"Enter board title"
+      })
+    }
+    else{
+      this.setState({
+        isValid:true,
+      })
+    }
     console.log("bdata", bData)
-    this.props.action.boardAction.AddBoard(bData)
+    const {history}=this.props
+    console.log(this.state.idboards)
+    if(this.state.isValid===true){
+    this.props.action.boardAction.AddBoard(bData,history)
+    }
   }
   handleCreateTeamEvent = () => {
     const idusers = localStorage.getItem("iduser")
@@ -107,7 +124,9 @@ class NavbarInside extends Component {
       tName: this.state.tName,
       tDesc: this.state.tDesc
     }
+    
     const { history } = this.props;
+
     this.props.action.teamAction.AddTeam(tData, history)
 
   }
@@ -138,7 +157,9 @@ class NavbarInside extends Component {
               <Form>
                 <FormGroup>
                   <Input type="text" name="bTitle" id="bTitle" placeholder="Add Board Title" onChange={(e) => this.handleOnChange("bTitle", e)} />
+                  
                 </FormGroup>
+                
                 <FormGroup>
                   <Label for="teamselect">Select Team</Label>
                   <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
@@ -149,7 +170,7 @@ class NavbarInside extends Component {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
+              <Button color="primary" disabled={this.state.bTitle===""} onClick={this.handleCreateBoardEvent.bind(this)}>Create</Button>{' '}
               <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
             </ModalFooter>
           </Modal>
@@ -168,13 +189,13 @@ class NavbarInside extends Component {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.handleCreateTeamEvent.bind(this)}>Create</Button>{' '}
+              <Button color="primary" disabled={this.state.tName===""} onClick={this.handleCreateTeamEvent.bind(this)}>Create</Button>{' '}
               <Button color="secondary" onClick={this.toggleTModal}>Cancel</Button>
             </ModalFooter>
           </Modal>
 
           <Navbar expand="md" style={{ backgroundColor: "#026AA7", fontWeight: "bold" }}>
-            <a href="/" style={{ background: "white", opacity: "0.5", borderRadius: "9%", padding: "0.5%" }}><img height="25px" width="80px" src={trelloIcon} alt=""></img></a>
+            <a href="/boards" style={{ background: "white", opacity: "0.5", borderRadius: "9%", padding: "0.5%" }}><img height="25px" width="80px" src={trelloIcon} alt=""></img></a>
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>

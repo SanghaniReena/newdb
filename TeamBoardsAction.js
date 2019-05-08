@@ -7,7 +7,7 @@ export const EDIT_TBOARD = "EDIT_TBOARD";
 export const FAILED = "FAILED";
 export const FETCH_IBOARD = "FETCH_IBOARD";
 
-export const AddTBoard = (data) => {
+export const AddTBoard = (data,history) => {
     return (dispatch) => {
         authService.teamboards(data)
             .then((response) => {
@@ -19,6 +19,8 @@ export const AddTBoard = (data) => {
                         data: response.data,
                     });
                 }
+                 if(response.data[0].idboards!==undefined){
+                     history.push("/board/" + response.data[0].idboards)}
             })
             .catch((error) => {
                 if (error) {
