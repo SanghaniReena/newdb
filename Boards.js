@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Card, CardTitle, Label } from 'reactstrap';
 import { bindActionCreators } from "redux";
-import * as boardAction from "../action/BoardsAction"
-import * as teamAction from "../action/TeamsAction"
+import * as boardAction from "../action/BoardsAction";
+import * as teamAction from "../action/TeamsAction";
+import * as listAction from "../action/ListsAction"
 import NavbarInside from "../view/NavbarInside"
 import { withRouter } from "react-router"
 
@@ -37,6 +38,9 @@ class Boards extends Component {
     }
     else {
       this.props.action.boardAction.FetchBoard(iduser)
+      this.props.action.boardAction.FetchAllBoard(iduser)
+      this.props.action.listAction.FetchAllList(iduser)
+
     }
   }
 
@@ -59,7 +63,6 @@ class Boards extends Component {
       idteams: this.state.idteams
     }
     const {history}=this.props
-    console.log("...",this.state.idboards)
     this.props.action.boardAction.AddBoard(bData,history)
     
   }
@@ -128,13 +131,14 @@ const mapStateToProps = (state) => {
   return {
     boardData: state.BoardReducer.boards,
     teamData: state.TeamReducer.teams,
+    allListData:state.ListsReducer.alllist
   }
 }
 const mapDispatchToProps = (dispatch) => ({
   action: {
     boardAction: bindActionCreators(boardAction, dispatch),
-    teamAction: bindActionCreators(teamAction, dispatch)
-
+    teamAction: bindActionCreators(teamAction, dispatch),
+    listAction:bindActionCreators(listAction,dispatch)
   }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Boards));

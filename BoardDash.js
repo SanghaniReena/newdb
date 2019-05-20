@@ -17,17 +17,6 @@ import Navbd from './Navbd';
 
 
 class BoardDash extends Component {
-  componentWillMount() {
-    const { history } = this.props;
-
-    const iduser = localStorage.getItem("iduser");
-    const idboards = this.props.location.pathname.slice(7);
-    this.props.action.teamAction.FetchTeam(iduser)
-    this.props.action.boardAction.FetchBoard(iduser, history)
-    this.props.action.listAction.FetchList(idboards)
-    this.props.action.teamboardAction.FetchiBoard(iduser, idboards)
-    this.props.action.cardAction.FetchCard(idboards);
-  }
   constructor(props) {
     super(props);
     this.state = {
@@ -57,6 +46,19 @@ class BoardDash extends Component {
     this.toggleTModal = this.toggleTModal.bind(this)
 
   }
+  componentDidMount() {
+    
+    const { history } = this.props;
+
+    const iduser = localStorage.getItem("iduser");
+    const idboards = this.props.location.pathname.slice(7);
+    this.props.action.teamAction.FetchTeam(iduser)
+    this.props.action.boardAction.FetchBoard(iduser, history)
+    this.props.action.listAction.FetchList(idboards)
+    this.props.action.teamboardAction.FetchiBoard(iduser, idboards)
+    this.props.action.cardAction.FetchCard(idboards);
+  }
+ 
   togglep() {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen

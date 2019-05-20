@@ -3,6 +3,7 @@ import * as authService from "../service/authService"
 export const Add_BOARD = "ADD_BOARD";
 export const FETCH_BOARD = "FETCH_BOARD";
 export const FAILED = "FAILED";
+export const FETCH_ALL_BOARD="FETCH_ALL_BOARD";
 
 export const AddBoard = (data,history) => {
     
@@ -15,6 +16,8 @@ export const AddBoard = (data,history) => {
                         data: response.data,
                     });
                     console.log("*****",response.data)
+                    console.log("*****", response.data[0].idboards)
+                   
                     if(response.data[0].idboards!==undefined){
                         history.push("/board/" + response.data[0].idboards)}
                 }
@@ -37,6 +40,26 @@ export const FetchBoard = (id) => {
                 if (response.status === 200) {
                     dispatch({
                         type: FETCH_BOARD,
+                        data: response.data
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+export const FetchAllBoard = (id) => {
+
+    return (dispatch) => {
+        authService.allboards(id)
+            .then((response) => {
+
+                if (response.status === 200) {
+                    dispatch({
+                        type: FETCH_ALL_BOARD,
                         data: response.data
                     });
                 }

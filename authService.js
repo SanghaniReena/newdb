@@ -15,6 +15,10 @@ export function boards(data) {
 export function boardsname(id) {
     return BaseService.get("/" + id + '/boards');
 }
+export function allboards(id) {
+    return BaseService.get("/" + id + '/allboards');
+}
+
 export function boardname(id) {
     return BaseService.get('/board/' + id);
 }
@@ -46,6 +50,10 @@ export function listname(id) {
 
     return BaseService.get("/" + id + '/lists');
 }
+export function alllistname(id) {
+    return BaseService.get("/" + id + '/alllists');
+}
+
 export function cards(data) {
     return BaseService.post('/cards', data);
 }

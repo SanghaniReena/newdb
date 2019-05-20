@@ -19,9 +19,7 @@ class NavbarInside extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
-    this.toggleModal = this.toggleModal.bind(this)
-    this.toggleTModal = this.toggleTModal.bind(this)
+   
     this.state = {
       isOpen: false,
       isOpenM: false,
@@ -36,6 +34,9 @@ class NavbarInside extends Component {
       auth: true,
       
     };
+    this.toggle = this.toggle.bind(this);
+    this.toggleModal = this.toggleModal.bind(this)
+    this.toggleTModal = this.toggleTModal.bind(this)
   }
   componentDidMount = () => {
     const iduser = localStorage.getItem("iduser")
@@ -89,32 +90,16 @@ class NavbarInside extends Component {
     }
   }
   handleCreateBoardEvent = () => {
+    this.toggleModal();
 
     const idusers = localStorage.getItem("iduser")
-    if(this.state.isValid===true){
-    this.toggleModal();}
     const bData = {
       iduser: idusers,
       bTitle: this.state.bTitle,
       idteams: this.state.idteams
     }
-    if(this.state.bTitle===""){
-      this.setState({
-        isValid:false,
-        valMsg:"Enter board title"
-      })
-    }
-    else{
-      this.setState({
-        isValid:true,
-      })
-    }
-    console.log("bdata", bData)
-    const {history}=this.props
-    console.log(this.state.idboards)
-    if(this.state.isValid===true){
+    const {history}=this.props    
     this.props.action.boardAction.AddBoard(bData,history)
-    }
   }
   handleCreateTeamEvent = () => {
     const idusers = localStorage.getItem("iduser")

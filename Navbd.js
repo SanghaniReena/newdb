@@ -35,11 +35,10 @@ class Navbd extends Component {
             auth: true,
         };
     }
-    componentWillMount = () => {
+    componentDidMount = () => {
         const iduser = localStorage.getItem("iduser")
-        this.props.action.teamAction.FetchTeam(iduser)
-    }
-
+        this.props.action.teamAction.FetchTeam(iduser);
+      }
     toggle() {
         this.setState({
             isOpen: !this.state.isOpen
@@ -83,18 +82,16 @@ class Navbd extends Component {
         }
     }
     handleCreateBoardEvent = () => {
+        
         const idusers = localStorage.getItem("iduser")
         this.toggleModal();
         const bData = {
-            iduser: idusers,
-            bTitle: this.state.bTitle,
-            idteams: this.state.idteams
-
+          iduser: idusers,
+          bTitle: this.state.bTitle,
+          idteams: this.state.idteams
         }
-        console.log("...",this.state.idboards)
-        const {history}=this.props
+        const {history}=this.props    
         this.props.action.boardAction.AddBoard(bData,history)
-
     }
     handlnavboardClick = () => {
         const iduser = localStorage.getItem("iduser")

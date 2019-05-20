@@ -1,7 +1,7 @@
-import { Add_BOARD, FAILED, FETCH_BOARD } from "../action/BoardsAction"
+import { Add_BOARD, FAILED, FETCH_BOARD ,FETCH_ALL_BOARD} from "../action/BoardsAction"
 const INITIAL_STATE = {
     boards: [],
-    idteams: 0,
+    allBoards:[]
 }
 const handleBoards = (state = INITIAL_STATE, action) => {
 
@@ -9,6 +9,10 @@ const handleBoards = (state = INITIAL_STATE, action) => {
         case FETCH_BOARD:
             {
                 return Object.assign({}, state, { boards: action.data })
+            }
+            case FETCH_ALL_BOARD:
+            {
+                return Object.assign({}, state, { allBoards: action.data })
             }
 
         case Add_BOARD:

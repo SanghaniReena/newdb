@@ -9,7 +9,9 @@ import * as listAction from "../action/ListsAction"
 import * as teamboardAction from "../action/TeamBoardsAction";
 import * as teamAction from "../action/TeamsAction"
 import BoardDash from "./BoardDash";
-import { DropdownItem, DropdownMenu, DropdownToggle, Input,Dropdown, Button, FormGroup, Label, Form, UncontrolledDropdown } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, Input, Dropdown, Button, FormGroup, Label, Form, UncontrolledDropdown } from 'reactstrap';
+import { allboards } from "../service/authService";
+import { all } from "q";
 const move = require("../img/move.png");
 const duedate = require("../img/duedate.png");
 const copy = require("../img/copy.png");
@@ -36,28 +38,30 @@ class Cards extends Component {
             comment: "",
             cDesc: "",
             idcards: 0,
+            idteams:0,
             showStb: false,
             showDel: false
         };
         this.toggle = this.toggle.bind(this);
 
     }
-    // componentWillMount() {
-    //     
-    //     const idcards = localStorage.getItem("cardid")
-    //     if(idcards){
-    //         this.props.action.cardAction.FetchCardComments(idcards)
-    //         this.props.action.cardAction.FetchCardDetails(idcards)
-    //     }
+    componentWillMount() {
+        debugger
+        const iduser = localStorage.getItem("iduser")
+        this.props.action.boardAction.FetchAllBoard(iduser)
+        
 
-    // }
+    }
+    componentDidUpdate(){
+        let {idteams}=this.state.idteams
+        this.props.action.listAction.FetchAllList(idteams)
+    }
     toggle() {
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
     }
     handleEdit = (e) => {
-
         return (e) => this.setState({
             editing: !this.state.editing,
             show: true
@@ -69,10 +73,10 @@ class Cards extends Component {
     }
 
     handleOnChange = (key, e) => {
+        debugger
         this.setState({
             [key]: e.target.value
         })
-
     }
     handleSubmit(e) {
         var val = this.state.editText.trim();
@@ -160,7 +164,6 @@ class Cards extends Component {
         this.props.action.cardAction.ArchiveCard(idcards)
     }
     handleArchiveClick = (idcards) => {
-
         this.setState({
             showDel: !this.state.showDel,
             isArch: 1
@@ -200,7 +203,53 @@ class Cards extends Component {
                 </div>
             )
         })
+        let allPBoards = [];
+        if (this.props.boardData.length > 0) {
+            allPBoards = this.props.boardData.filter((boards) => {
+                return boards.idteams === 0
+            })
+        }
+        let allPBoardsnames = [];
+        if (allPBoards.length > 0) {
+            allPBoardsnames = allPBoards.map((allPBoards, key) => {
+                return (
 
+                    <option key={key} value={allPBoards.idboards}>{allPBoards.bTitle}</option>
+                )
+            })
+        }
+
+        let alltBoards = [];
+        if (this.props.allBoardsData.length > 0) {
+            alltBoards = this.props.allBoardsData.filter((allboards) => {
+                return allboards.idteams !== 0
+            })
+        }
+        let boardTeamWise = []
+        if (this.props.teamData.length > 0) {
+            boardTeamWise = this.props.teamData.map((team, key) => {
+                return (<optgroup key={key} label={team.tName}>
+                    {
+                        alltBoards.map((alltBoards, key) => {
+                            if (team.idteams === alltBoards.idteams) {
+                                return (<option key={key} value={alltBoards.idboards} >{alltBoards.bTitle}</option>)
+                            }
+                        })
+                    }
+                </optgroup>)
+            })
+        }
+        let boardlist=[]
+        if(this.props.allListData.length>0){
+       // let {idteamsM}=this.state.idteams
+        boardlist=this.props.allListData.map((allList)=>{
+           
+                return (
+                    <option>{allList.lName}</option>
+                )
+            
+        })
+        }
         return (
             <div>
 
@@ -275,37 +324,37 @@ class Cards extends Component {
                             <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={member} style={{ marginRight: "3px" }} />Members</div></div>
                             <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={duedate} style={{ marginRight: "3px" }} />Due Date</div></div>
                             <div className="cmbTitle">Action</div>
-                           <div>
-                            <Dropdown  isOpen={this.state.dropdownOpen} toggle={this.toggle} >
-                           
-                            
-                                <span
-                                onClick={this.toggle}
-                               
-                                >
-                                <div ><img alt="" height="20px" width="20px" src={move} style={{ marginRight: "3px" }} />Move</div>
-                                </span>
-                                <DropdownMenu style={{ width: "max-content" }}>
-                                    <DropdownItem style={{ textAlign: "center" }} header>Add to a team</DropdownItem>
-                                    <DropdownItem divider />
-                                    <Form style={{ width: "max-content", padding: "5%" }} >
-                                        <FormGroup>
-                                            <Label for="teamselect">This board is a part of..</Label>
-                                            <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
-                                                <option value="0">Personal boards (No team)</option>
-
+                            <div>
+                                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle} >
+                                    <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "black", borderRadius: "1%", height: "32px", width: "150px", background: "#ebeef0", padding: "2%", margin: "1%", marginTop: "6%", border: "None" }}>
+                                        <span onClick={this.toggle}>
+                                            <div ><img alt="" height="20px" width="20px" src={move} style={{ marginRight: "3px" }} />Move</div>
+                                        </span>
+                                    </DropdownToggle>
+                                    <DropdownMenu style={{ width: "300px" }} >
+                                        <DropdownItem style={{ textAlign: "center" }} header>Move Card</DropdownItem>
+                                        <DropdownItem divider />
+                                        <Form style={{ width: "300PX", padding: "5%" }} >
+                                            <FormGroup >
+                                                <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
+                                                    <optgroup label="Personal boards">{allPBoardsnames}</optgroup>
+                                                    {boardTeamWise}
+                                                </Input>
+                                            </FormGroup>
+                                            <FormGroup >
+                                            <Input type="select" name="idlist" id="idlist" onChange={(e) => this.handleOnChange("idlist", e)} >
+                                                
+                                                {boardlist}
                                             </Input>
                                         </FormGroup>
-                                    </Form>
-                                    <div style={{ paddingLeft: "5%" }} >
-                                        <Button color="primary"  >Add</Button>
-                                        <a style={{ marginLeft: "35%", float: "center", textAlign: "center" }} href="/boards">Create Team</a></div>
-                                </DropdownMenu>
-                            </Dropdown >
-
-</div>
-
-
+                                        </Form>
+                                        
+                                        <div style={{ paddingLeft: "5%" }} >
+                                            <Button color="primary">Move</Button>
+                                        </div>
+                                    </DropdownMenu>
+                                </Dropdown >
+                            </div>
                             <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={copy} style={{ marginRight: "3px" }} />Copy</div></div>
                             <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={watch} style={{ marginRight: "3px" }} />Watch</div></div>
                             {!this.state.showDel
@@ -330,8 +379,9 @@ const mapStateToProps = (state) => {
         cardData: state.CardsReducer.cards,
         cardComment: state.CardsReducer.cardComment,
         cardDetails: state.CardsReducer.cardDetails,
-        archived: state.CardsReducer.archived
-
+        archived: state.CardsReducer.archived,
+        allBoardsData: state.BoardReducer.allBoards,
+        allListData:state.ListsReducer.allList
     }
 }
 const mapDispatchToProps = (dispatch) => ({
