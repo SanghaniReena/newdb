@@ -13,6 +13,7 @@ const handleLists = (state = INITIAL_STATE, action) => {
             }
         case FETCH_ALL_LIST:
             {
+                debugger
                 return Object.assign({}, state, { allList: action.data })
             }
         case ADD_LIST:

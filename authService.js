@@ -18,7 +18,6 @@ export function boardsname(id) {
 export function allboards(id) {
     return BaseService.get("/" + id + '/allboards');
 }
-
 export function boardname(id) {
     return BaseService.get('/board/' + id);
 }
@@ -39,19 +38,16 @@ export function teamboardsname(id) {
     return BaseService.get("/" + id + '/teamboards');
 }
 export function editteamboards(idboards, idteams) {
-
     return BaseService.put("/" + idboards + '/editteamboards/' + idteams);
 }
-
 export function lists(data) {
     return BaseService.post('/lists', data);
 }
 export function listname(id) {
-
-    return BaseService.get("/" + id + '/lists');
+return BaseService.get("/" + id + '/lists');
 }
-export function alllistname(id) {
-    return BaseService.get("/" + id + '/alllists');
+export function alllistname(id) {  
+   return BaseService.get("/" + id + '/alllists');
 }
 
 export function cards(data) {
@@ -60,12 +56,13 @@ export function cards(data) {
 export function deletecards(id) {
     return BaseService.delete('/'+id+'/cardsdel');
 }
-
 export function cardsname(id) {
     return BaseService.get("/" + id + '/cards');
 }
+export function moveCard(data) {
+    return BaseService.put('/movecard',data);
+}
 export function editdcardsname(idlists, idcards) {
-    
     return BaseService.put("/" + idlists + '/editcards/' + idcards);
 }
 export function AddComment(data) {  
@@ -79,22 +76,20 @@ export function fetchCardDetails(id) {
     return BaseService.get("/"+id+"/carddetails");
 }
 export function AddDesc(data) {
-   
     return BaseService.post("/cardsdesc",data);
 }
 export function EditDesc(data) {
-   
     return BaseService.post("/cardseditdesc",data);
 }
 export function archiveCard(id) {
-   
     return BaseService.post("/"+id+"/archivecard");
 }
 export function stbCard(id) {
-   
     return BaseService.post("/"+id+"/sendtb");
 }
-export function deletecomm(id) {
-   
+export function deletecomm(id) { 
     return BaseService.delete("/"+id+"/delcomt");
+}
+export function addduedate(data) {
+    return BaseService.post("/duedate",data);
 }

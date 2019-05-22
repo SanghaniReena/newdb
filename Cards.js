@@ -2,16 +2,16 @@ import "./Cards.css"
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from "react-responsive-modal";
+import Calendar from 'react-calendar';
+import TimeField from 'react-simple-timefield';
 import { bindActionCreators } from "redux";
 import * as boardAction from "../action/BoardsAction"
 import * as cardAction from "../action/CardsAction"
 import * as listAction from "../action/ListsAction"
 import * as teamboardAction from "../action/TeamBoardsAction";
-import * as teamAction from "../action/TeamsAction"
-import BoardDash from "./BoardDash";
-import { DropdownItem, DropdownMenu, DropdownToggle, Input, Dropdown, Button, FormGroup, Label, Form, UncontrolledDropdown } from 'reactstrap';
-import { allboards } from "../service/authService";
-import { all } from "q";
+import * as teamAction from "../action/TeamsAction";
+
+import { DropdownItem, DropdownMenu, Label, DropdownToggle, Input, Dropdown, Button, FormGroup, Form, } from 'reactstrap';
 const move = require("../img/move.png");
 const duedate = require("../img/duedate.png");
 const copy = require("../img/copy.png");
@@ -33,33 +33,75 @@ class Cards extends Component {
         this.state = {
             editText: "",
             dropdownOpen: false,
+            ddrodpownOpen: false,
             editing: false,
             show: false,
             comment: "",
             cDesc: "",
+            date: "",
             idcards: 0,
-            idteams:0,
+            idboards: 0,
+            idlist: 0,
+            rem:0,
             showStb: false,
-            showDel: false
+            showDel: false,
+            time: '12:00'
         };
         this.toggle = this.toggle.bind(this);
-
+        this.toggled = this.toggled.bind(this)
+        this.onTimeChange = this.onTimeChange.bind(this);
     }
     componentWillMount() {
-        debugger
-        const iduser = localStorage.getItem("iduser")
-        this.props.action.boardAction.FetchAllBoard(iduser)
         
-
+        const iduser = localStorage.getItem("iduser")
+        this.props.action.boardAction.FetchAllBoard(iduser);
+        // this.props.action.cardAction.FetchCardComments(this.props.idcards)
     }
-    componentDidUpdate(){
-        let {idteams}=this.state.idteams
-        this.props.action.listAction.FetchAllList(idteams)
+
+    componentDidMount() {
+        let idb;
+        if (this.props.allBoardsData.length > 0) {
+            idb = this.props.allBoardsData[0].idboards
+        }
+        else {
+            idb = 0
+        }
+        this.props.action.listAction.FetchAllList(idb);
+        var dated = new Date().getDate() + 1; //Current Date.
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear()
+        var defaltDate = month + "/" + dated + "/" + year
+        this.setState({
+            date:defaltDate
+        })
+    }
+    toggled() {
+        var dated = new Date().getDate() + 1; //Current Date.
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear()
+        var defaltDate = month + "/" + dated + "/" + year
+        this.setState({
+            date:defaltDate,
+            rem:0
+        })
+        this.setState({
+            ddropdownOpen: !this.state.ddropdownOpen,
+        });
     }
     toggle() {
         this.setState({
-            dropdownOpen: !this.state.dropdownOpen
+            dropdownOpen: !this.state.dropdownOpen,
+            idboards: 0,
+            idlist: 0
         });
+        let idb;
+        if (this.props.allBoardsData.length > 0) {
+            idb = this.props.allBoardsData[0].idboards
+        }
+        else {
+            idb = 0
+        }
+        this.props.action.listAction.FetchAllList(idb);
     }
     handleEdit = (e) => {
         return (e) => this.setState({
@@ -73,10 +115,25 @@ class Cards extends Component {
     }
 
     handleOnChange = (key, e) => {
-        debugger
+        
         this.setState({
             [key]: e.target.value
         })
+
+    }
+    handleOnChangemove = (key, e) => {
+        this.setState({
+            [key]: e.target.value
+        })
+        this.props.action.listAction.FetchAllList(e.target.value)
+    }
+    handleOnChangeDate = (key, e) => {
+        let d = e.toLocaleDateString();
+        this.setState({
+            date: d
+        })
+
+        console.log("date", this.setState.date)
     }
     handleSubmit(e) {
         var val = this.state.editText.trim();
@@ -155,6 +212,7 @@ class Cards extends Component {
         this.setState({
             show: !this.state.show
         })
+
     }
     handleCancelc = (e) => {
         e.preventDefault();
@@ -172,11 +230,97 @@ class Cards extends Component {
 
     }
     handleDelComm = (idcomm) => {
-        //this.props.action.cardAction.deleteComm(idcomm)
+        this.props.action.cardAction.deleteComm(idcomm)
+    }
+    onTimeChange(time) {
+        this.setState({ time });
+    }
+    hanndleMove = () => {
+        let moveData = []
+        let idb;
+        if (this.state.idboards === 0) {
+            if (this.props.allBoardsData.length > 0) {
+                idb = this.props.allBoardsData[0].idboards
+            }
+            else {
+                idb = 0
+            }
+            moveData = {
+                idcards: this.props.idcards,
+                idboards: idb,
+                idlist: this.state.idlist
+            }
+        }
+        if (this.state.idlist === 0) {
+            let idl;
+            if (this.props.allListData.length > 0) {
+                idl = this.props.allListData[0].idlist
+            }
+            else {
+                idl = 0
+            }
+            moveData = {
+                idcards: this.props.idcards,
+                idboards: this.state.idboards,
+                idlist: idl
+            }
+        }
+        if (this.state.idboards === 0 && this.state.idlist === 0) {
+            let idb;
+            let idl;
+            if (this.props.allBoardsData.length > 0) {
+                idb = this.props.allBoardsData[0].idboards
+            }
+            else {
+                idb = 0
+            }
+            if (this.props.allListData.length > 0) {
+                idl = this.props.allListData[0].idlist
+            }
+            else {
+                idl = 0
+            }
+            moveData = {
+                idcards: this.props.idcards,
+                idboards: idb,
+                idlist: idl
+            }
+        }
+        if (this.state.idboards !== 0 && this.state.idlist !== 0) {
+            moveData = {
+                idcards: this.props.idcards,
+                idboards: this.state.idboards,
+                idlist: this.state.idlist
+            }
+        }
+        this.props.action.cardAction.MoveCard(moveData)
+        this.toggle()
+        this.props.onClose()
+        console.log("move dataa", moveData)
+    }
+    handleDueDatesub=()=>{
+        let ddData={}
+        if(this.state.rem===0){
+            ddData={
+                idcards:this.props.idcards,
+                date:this.state.date,
+                time:this.state.time,
+                reminder:1
+            }
+        }
+        else{
+            ddData={
+                idcards:this.props.idcards,
+                date:this.state.date,
+                time:this.state.time,
+                reminder:this.state.rem
+            }
+        }
+        this.props.action.cardAction.AddDueDate(ddData)
+        this.toggled()
     }
 
     render() {
-
         const userName = localStorage.getItem("userName");
         let singleCard = []
         if (this.props.cardData.length > 0) {
@@ -194,7 +338,6 @@ class Cards extends Component {
             }
         }
         let cComments = []
-
         cComments = this.props.cardComment.map((cardComment, key) => {
             return (
                 <div key={key}><div className="cmCommTitle">{userName}</div>
@@ -239,17 +382,17 @@ class Cards extends Component {
                 </optgroup>)
             })
         }
-        let boardlist=[]
-        if(this.props.allListData.length>0){
-       // let {idteamsM}=this.state.idteams
-        boardlist=this.props.allListData.map((allList)=>{
-           
+        let boardlist = []
+        if (this.props.allListData.length > 0) {
+            boardlist = this.props.allListData.map((allList, key) => {
                 return (
-                    <option>{allList.lName}</option>
+                    <option key={key} value={allList.idlist}>{allList.lName}</option>
                 )
-            
-        })
+            })
+        } else {
+            boardlist = <option >No Lists</option>
         }
+
         return (
             <div>
 
@@ -263,6 +406,8 @@ class Cards extends Component {
                                 {(singlelist.length > 0) ?
                                     singlelist[0].lName
                                     : (this.props.archived[0] ? this.props.archived[0].lName : "")}</a></div>
+
+                                    <div>DD</div>
                             <div>
                                 <div className="cmTitle"><img alt="" height="30px" width="30px" src={description} style={{ marginRight: "5px" }} />Description</div>
                                 {this.state.show ?
@@ -322,7 +467,71 @@ class Cards extends Component {
                         <div className="cmSubDiv2">
                             <div className="cmbTitle">Add To Card</div>
                             <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={member} style={{ marginRight: "3px" }} />Members</div></div>
-                            <div className="cmbtn"><div><img alt="" height="20px" width="20px" src={duedate} style={{ marginRight: "3px" }} />Due Date</div></div>
+
+                            <div>
+                                <Dropdown isOpen={this.state.ddropdownOpen} toggle={this.toggled} >
+                                    <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "black", borderRadius: "1%", height: "32px", width: "150px", background: "#ebeef0", padding: "2%", margin: "1%", marginTop: "6%", border: "None" }}>
+                                        <span onClick={this.toggled}>
+                                            <div ><img alt="" height="20px" width="20px" src={duedate} style={{ marginRight: "3px" }} />Due Date</div>
+                                        </span>
+                                    </DropdownToggle>
+                                    <DropdownMenu style={{ width: "300px" }} >
+                                        <DropdownItem style={{ textAlign: "center" }} header>Due Date</DropdownItem>
+                                        <DropdownItem divider />
+                                        <Form >
+                                            <div >
+                                                <div >
+                                                    <div className="row">
+                                                        <div className="column">
+                                                            <FormGroup>
+                                                                <div className="datelabel"><Label >Date</Label></div>
+                                                                <input style={{ padding: "3%", marginLeft: "5%", width: "90%" }}
+                                                                    value={this.state.date}
+                                                                    onChange={(e) => this.handleOnChange("date", e)}
+                                                                ></input>
+                                                            </FormGroup>
+
+                                                        </div>
+                                                        <div className="column">
+                                                            <FormGroup>
+                                                                <div className="timelabel"><Label >Time</Label></div>
+                                                                <TimeField value={this.state.time} style={{ padding: "3%", marginLeft: "5%", width: "90%" }} onChange={this.onTimeChange} />
+                                                            </FormGroup>
+                                                        </div>
+
+                                                    </div>
+                                                </div>                                                
+                                                    <div className="calender">
+                                                        <Calendar
+                                                            onChange={(e) => this.handleOnChangeDate("date", e)}
+                                                        />
+                                                    </div>
+                                                <FormGroup>
+                                                    <div className="rem"><Label >Set Reminder</Label></div>
+                                                    <Input style={{ margin: "2%", marginLeft: "4%", width: "92%" }} defaultValue="1" type="select" disabled={this.props.allListData.length === 0} name="idlist" id="idlist" onChange={(e) => this.handleOnChange("rem", e)} >
+                                                        <option value="1">None</option>
+                                                        <option value="2">At a Time of Due Date</option>
+                                                        <option value="3">5 Minutes Before</option>
+                                                        <option value="4">10 Minutes Before</option>
+                                                        <option value="5">15 Minutes Before</option>
+                                                        <option value="6">1 Hour Before</option>
+                                                        <option value="7">2 Hours Before</option>
+                                                        <option value="8">1 day Before</option>
+                                                        <option value="9">2 days Before</option>
+                                                    </Input>
+                                                    <div className="reText">Reminders will be sent to all members and watchers of this card.</div>
+                                                    <div style={{ paddingLeft: "5%",marginTop:"1%" }} >
+                                                    <Button onClick={this.handleDueDatesub.bind(this)} color="success" style={{padding:"1% 4%",maxHeight:"30px",fontSize:"15px",fontWeight:"bold",alignContent:"center"}}>Save</Button>
+                                                    <Button color="danger" style={{float:"right",padding:"1% 4%",maxHeight:"30px",fontSize:"15px",fontWeight:"bold",alignContent:"center",marginRight:"3%"}}>Remove</Button>
+
+                                                    </div>
+                                                </FormGroup>
+                                            </div>
+                                        </Form>
+
+                                    </DropdownMenu>
+                                </Dropdown >
+                            </div>
                             <div className="cmbTitle">Action</div>
                             <div>
                                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle} >
@@ -336,21 +545,24 @@ class Cards extends Component {
                                         <DropdownItem divider />
                                         <Form style={{ width: "300PX", padding: "5%" }} >
                                             <FormGroup >
-                                                <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
-                                                    <optgroup label="Personal boards">{allPBoardsnames}</optgroup>
-                                                    {boardTeamWise}
+                                                {allPBoards.length > 0 ?
+                                                    <Input type="select" name="idboards" id="idboards" onChange={(e) => this.handleOnChangemove("idboards", e)} >
+                                                        <optgroup label="Personal boards"  >{allPBoardsnames}</optgroup>
+                                                        {boardTeamWise}
+                                                    </Input> : ""}
+
+                                            </FormGroup>
+                                            <FormGroup   >
+                                                <Input type="select" disabled={this.props.allListData.length === 0} name="idlist" id="idlist" onChange={(e) => this.handleOnChange("idlist", e)} >
+                                                    {boardlist}
                                                 </Input>
                                             </FormGroup>
-                                            <FormGroup >
-                                            <Input type="select" name="idlist" id="idlist" onChange={(e) => this.handleOnChange("idlist", e)} >
-                                                
-                                                {boardlist}
-                                            </Input>
-                                        </FormGroup>
+                                            <div>
+                                            </div>
                                         </Form>
-                                        
+
                                         <div style={{ paddingLeft: "5%" }} >
-                                            <Button color="primary">Move</Button>
+                                            <Button color="primary" disabled={this.props.allListData.length === 0} onClick={this.hanndleMove.bind(this)}>Move</Button>
                                         </div>
                                     </DropdownMenu>
                                 </Dropdown >
@@ -381,7 +593,7 @@ const mapStateToProps = (state) => {
         cardDetails: state.CardsReducer.cardDetails,
         archived: state.CardsReducer.archived,
         allBoardsData: state.BoardReducer.allBoards,
-        allListData:state.ListsReducer.allList
+        allListData: state.ListsReducer.allList
     }
 }
 const mapDispatchToProps = (dispatch) => ({

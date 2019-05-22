@@ -2,7 +2,7 @@ div.cmMainDiv{
     /* margin: 5%; */
     padding: 2.5%;
     /* size: 80%; */
-    min-height: 520px;
+    min-height: 700px;
     min-width: 770px;
     
 }
@@ -136,4 +136,62 @@ div.cmSubdel:hover{
 }
 div.commentMain{
     border-bottom: #6b778c
+}
+div.calender{
+   
+    padding: 2%;
+    margin: 2%;
+    border: #6b778c;
+    
+}
+div.datelabel{
+    padding: 2%;
+    margin: 2% 2% -5%;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    float:top ;
+    width: 50%
+}
+div.rem{
+    margin-left: 4%;
+    margin-bottom: -3%;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    float:top ;
+    width: 50%
+}
+div.timelabel{
+    padding: 2%;
+    margin: 2% 2% -5%;
+    width: 50%;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    float:top
+}
+.column {
+    float: left;
+    width: 40%;
+   margin-left: 6%;
+   margin-bottom: -5%;
+  }
+.row:after {
+    display: table;
+    clear: both;
+    margin: 5%
+  }
+input.datein{
+    width: 30%
+}
+div.reText{
+    color:#6b778c;
+    margin-left: 4%;
+    font-size: 14px; 
+}
+button.dtndueDate{
+    background-color: #5aac44;
+    box-shadow: 0 1px 0 0 #3f6f21;
+    color: #fff
 }

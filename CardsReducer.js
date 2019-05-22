@@ -1,9 +1,10 @@
-import { ADD_CARD, FAILED, ARCHIVE_CARD,DELETE_CARD_COMM, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
+import { ADD_CARD, ADD_DUEDATE,FAILED, ARCHIVE_CARD, DELETE_CARD_COMM, MOVE_CARD, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
 const INITIAL_STATE = {
     cards: [],
     cardDetails: [],
     cardComment: [],
-    archived: []
+    archived: [],
+    duedate:[]
 }
 const handleCards = (state = INITIAL_STATE, action) => {
 
@@ -20,9 +21,21 @@ const handleCards = (state = INITIAL_STATE, action) => {
                 return Object.assign({}, state, { cards: newdata })
 
             }
+        case MOVE_CARD: {
+            
+            let ind
+            for (let i = 0; i < state.cards.length; i++) {
+                if (state.cards[i].idcards === action.data[0].idcards) {
+                    ind = i
+                }
+            }
+            let newcc = state.cards
+            newcc.splice(ind, 1)
+            const newData = state.cards.concat(action.data[0]);
+            return Object.assign({}, state, { cards: newData })
+        }
         case ARCHIVE_CARD:
             {
-                ;
                 var index;
                 for (let i = 0; i < state.cards.length; i++) {
                     if (state.cards[i].idcards === action.data[0].idcards) {
@@ -49,9 +62,6 @@ const handleCards = (state = INITIAL_STATE, action) => {
             }
         case EDITD_CARD:
             {
-                
-                console.log(action.data);
-                console.log(state.cards)
                 for (let i = 0; i < state.cards.length; i++) {
                     if (state.cards[i].idcards === action.data[0].idcards) {
                         index = i
@@ -61,8 +71,6 @@ const handleCards = (state = INITIAL_STATE, action) => {
                 newc.splice(index, 1)
                 const newData = state.cards.concat(action.data[0]);
                 return Object.assign({}, state, { cards: newData })
-
-                // break;
             }
         case ADD_COMMENT:
             {
@@ -85,30 +93,35 @@ const handleCards = (state = INITIAL_STATE, action) => {
                 newc.splice(index, 1)
                 const newData = state.cardDetails.concat(action.data[0]);
                 return Object.assign({}, state, { cardDetails: newData })
-
             }
-        // case DELETE_CARD:{
-
-        // }
         case DELETE_CARD_COMM:
-        {
-            console.log("deleted comm",action.data);
-            break;
-        }
+            {
+                for (let i = 0; i < state.cardComment.length; i++) {
+                    if (state.cardComment[i].idcomm === action.data) {
+                        index = i
+                    }
+                }
+                let newc = state.cardComment
+                newc.splice(index, 1)
+                return Object.assign({}, state, { cardComment:newc })
+            }
         case FETCH_CARD_DETAILS:
             {
                 return Object.assign({}, state, { cardDetails: action.data })
             }
         case FETCH_CARD_COMMENTS:
             {
-                
+
                 return Object.assign({}, state, { cardComment: action.data })
             }
         case FAILED:
             {
                 return Object.assign({}, state, { error_msg: action.data.error_msg });
             }
-
+        case ADD_DUEDATE:{
+            const newdata = state.duedate.concat(action.data[0]);
+            return Object.assign({}, state, { duedate: newdata })
+        }
         default:
             return state;
     }

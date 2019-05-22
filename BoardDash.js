@@ -70,7 +70,14 @@ class BoardDash extends Component {
       open: true,
       idcards: idcards,
     });
-
+    let idb;
+    if(this.props.allBoardsData.length>0){
+         idb=this.props.allBoardsData[0].idboards
+    }
+    else{
+        idb=0
+    }
+    this.props.action.listAction.FetchAllList(idb);
   };
 
   onCloseModal = () => {
@@ -235,8 +242,6 @@ class BoardDash extends Component {
                 }
                 else { return "" }
               }) : ""}
-
-
             <div className="Addcard" onClick={() => this.handleCardClick(listData.idlist)}>+ Add a card</div>
           </Card>
         </div>
@@ -330,7 +335,9 @@ const mapStateToProps = (state) => {
     teamData: state.TeamReducer.teams,
     listData: state.ListsReducer.lists,
     teamBoardData: state.TeamBoardsReducer.teamboards,
-    cardData: state.CardsReducer.cards
+    cardData: state.CardsReducer.cards,
+    allBoardsData: state.BoardReducer.allBoards,
+
 
   }
 }

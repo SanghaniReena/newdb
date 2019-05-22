@@ -44,7 +44,7 @@ export const FetchList = (id) => {
     }
 }
 export const FetchAllList = (id) => {
-
+debugger
     return (dispatch) => {
         authService.alllistname(id)
             .then((response) => {

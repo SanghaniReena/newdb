@@ -12,8 +12,9 @@ export const DELETE_CARD = "DELETE_CARD";
 export const ARCHIVE_CARD = "ARCHIVE_CARD";
 export const DELETE_CARD_COMM="DELETE_CARD_COMM"
 export const SENDTB_CARD="SENDTB_CARD";
+export const MOVE_CARD="MOVE_CARD";
+export const ADD_DUEDATE="ADD_DUEDATE";
 export const AddCard = (data) => {
-
     return (dispatch) => {
         authService.cards(data)
             .then((response) => {
@@ -244,6 +245,46 @@ export const deleteComm = (id) => {
                     dispatch({
                         type: DELETE_CARD_COMM,
                         data: response.data,
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+
+export const MoveCard = (data) => {
+    
+    return (dispatch) => {
+        authService.moveCard(data)
+            .then((response) => {
+
+                if (response.status === 200) {
+                    dispatch({
+                        type: MOVE_CARD,
+                        data: response.data
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+export const AddDueDate = (data) => {
+    return (dispatch) => {
+        authService.addduedate(data)
+            .then((response) => {
+
+                if (response.status === 200) {
+                    dispatch({
+                        type: ADD_DUEDATE,
+                        data: response.data
                     });
                 }
             })
