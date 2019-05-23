@@ -27,6 +27,7 @@ const handleTBoards = (state = INITIAL_STATE, action) => {
             }
         case EDIT_TBOARD:
         {
+            console.log("edit data",action.data)
             return Object.assign({}, state, { teamboards: action.data })            
         }
         case FAILED:

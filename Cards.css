@@ -25,6 +25,17 @@ margin-bottom: 2%;
 margin-left: 35px;
 
 }
+div.cmsubFont2{
+    color:#6B8086;
+    margin-bottom: 2%;
+    margin-left: 35px;
+    
+    }
+    div.cmsubFont2:hover{
+        cursor: pointer;
+        text-decoration: underline;
+        color: #6b778c;
+        }
 div.cmAddDesc{
     min-width:500px;
     border:none;
@@ -194,4 +205,8 @@ button.dtndueDate{
     background-color: #5aac44;
     box-shadow: 0 1px 0 0 #3f6f21;
     color: #fff
+}
+div.teamin:hover{
+    text-decoration: underline;
+    cursor: pointer;
 }

@@ -46,10 +46,9 @@ class BoardDash extends Component {
     this.toggleTModal = this.toggleTModal.bind(this)
 
   }
-  componentDidMount() {
+  componentWillMount() { 
     
     const { history } = this.props;
-
     const iduser = localStorage.getItem("iduser");
     const idboards = this.props.location.pathname.slice(7);
     this.props.action.teamAction.FetchTeam(iduser)
@@ -57,8 +56,9 @@ class BoardDash extends Component {
     this.props.action.listAction.FetchList(idboards)
     this.props.action.teamboardAction.FetchiBoard(iduser, idboards)
     this.props.action.cardAction.FetchCard(idboards);
+    
+
   }
- 
   togglep() {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen
@@ -78,6 +78,9 @@ class BoardDash extends Component {
         idb=0
     }
     this.props.action.listAction.FetchAllList(idb);
+    this.props.action.cardAction.FetchDuedate(idcards)
+    this.props.action.cardAction.FetchCardComments(idcards)
+
   };
 
   onCloseModal = () => {
@@ -180,6 +183,20 @@ class BoardDash extends Component {
     this.props.action.cardAction.DEditCard(idlist, eidcards)
 
   }
+  handleCreateTeamEvent = () => {
+    const idusers = localStorage.getItem("iduser")
+    this.toggleTModal();
+    const tData = {
+      iduser: idusers,
+      tName: this.state.tName,
+      tDesc: this.state.tDesc
+    }
+    
+    const { history } = this.props;
+
+    this.props.action.teamAction.AddTeam(tData, history)
+
+  }
   onDragOver = (e) => {
     e.preventDefault();
   }
@@ -199,7 +216,6 @@ class BoardDash extends Component {
     })
   }
   render() {
-
     let data = this.props.teamBoardData[0];
     let teamSelect = this.props.teamData.map((teamData, key) => {
       return (
@@ -266,21 +282,40 @@ class BoardDash extends Component {
             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
-        <Navbar expand="md" style={{ backgroundColor: "#3487B8", fontWeight: "bold" }}>
+        <Modal isOpen={this.state.isOpenTM} toggle={this.toggleTModal}>
+            <ModalBody>
+              <ModalHeader toggle={this.toggleTModal}>Create Team</ModalHeader>
+              <Form>
+                <FormGroup>
+                  <Input type="text" name="tName" id="tName" placeholder="Add team name" onChange={(e) => this.handleOnChange("tName", e)} />
+                </FormGroup>
+              </Form>
+              <Form>
+                <FormGroup>
+                  <Input type="text" name="tDesc" id="tDesc" placeholder="Add team description" onChange={(e) => this.handleOnChange("tDesc", e)} />
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" disabled={this.state.tName===""} onClick={this.handleCreateTeamEvent.bind(this)}>Create</Button>{' '}
+              <Button color="secondary" onClick={this.toggleTModal}>Cancel</Button>
+            </ModalFooter>
+          </Modal>
+        <Navbar expand="md" style={{ backgroundColor: "#3487B8", fontWeight: "bold",padding:"0.3%"}}>
           <Nav navbar>
             <div className="boardnav">{(data) ? data.bTitle : ""}</div>
             <div style={{ borderLeft: "inset", marginLeft: "1%" }} ></div>
 
             <UncontrolledDropdown nav inNavbar isOpen={this.state.dropdownOpen} toggle={this.toggleD} >
-              <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "white", background: "#3487B8", padding: "2%", margin: "1%", marginLeft: "4%", border: "None" }}>
+              <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "white", background: "#3487B8", padding: "2%",  marginLeft: "4%", border: "None" ,maxHeight:"max-content"}}>
                 <center> {(data) ? ((data.idteams === 0)
-                  ? (<div className="boardnav" style={{ marginTop: "5%", padding: "2%", marginLeft: "1%" }}>Personal</div>)
-                  : (<div className="boardnav" style={{ marginTop: "5%", padding: "2%", marginLeft: "1%" }}>{(teamname) ? (teamname[0].tName) : ""}</div>)) : ""} </center>
+                  ? (<div className="boardnav" style={{ padding: "4%" }}>Personal</div>)
+                  : (<div className="boardnav" style={{  padding: "4%", marginRight: "-22%" }}>{(teamname) ? (teamname[0].tName) : ""}</div>)) : ""} </center>
               </DropdownToggle>
               <DropdownMenu style={{ width: "max-content" }}>
                 <DropdownItem style={{ textAlign: "center" }} header>Add to a team</DropdownItem>
                 <DropdownItem divider />
-                <Form style={{ width: "max-content", padding: "5%" }} >
+                <Form style={{ maxWidth: "fit-content", padding: "5%" }} >
                   <FormGroup>
                     <Label for="teamselect">This board is a part of..</Label>
                     <Input type="select" name="idteams" id="idteams" onChange={(e) => this.handleOnChange("idteams", e)} >
@@ -291,14 +326,13 @@ class BoardDash extends Component {
                 </Form>
                 <div style={{ paddingLeft: "5%" }} >
                   <Button color="primary" onClick={this.handleChangeTeam.bind(this, data)} >Add</Button>
-                  <a style={{ marginLeft: "35%", float: "center", textAlign: "center" }} href="/boards">Create Team</a></div>
+                  <div className="teamin" style={{ marginRight: "5%",alignContent:"botton",marginTop:"6%", float: "right", textAlign: "center" ,fontWeight:"None"}} onClick={this.toggleTModal}>Create Team</div></div>
               </DropdownMenu>
             </UncontrolledDropdown >
             <div style={{ borderLeft: "inset", marginLeft: "6%" }} ></div>
-
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav style={{ alignSelf: "center", fontWeight: "bold", color: "white", background: "#3487B8", padding: "2%", margin: "1%", marginLeft: "4%", border: "None" }}>
-                <center><div className="boardnav" style={{ marginTop: "5%", marginLeft: "1%", padding: "2%" }}>Private</div></center></DropdownToggle>
+                <center><div className="boardnav" style={{   padding: "4%" }}>Private</div></center></DropdownToggle>
               <DropdownMenu>
                 <DropdownItem style={{ textAlign: "center" }} header>Select</DropdownItem>
                 <DropdownItem divider />

@@ -55,7 +55,8 @@ class Cards extends Component {
         
         const iduser = localStorage.getItem("iduser")
         this.props.action.boardAction.FetchAllBoard(iduser);
-        // this.props.action.cardAction.FetchCardComments(this.props.idcards)
+       
+      
     }
 
     componentDidMount() {
@@ -132,8 +133,6 @@ class Cards extends Component {
         this.setState({
             date: d
         })
-
-        console.log("date", this.setState.date)
     }
     handleSubmit(e) {
         var val = this.state.editText.trim();
@@ -319,7 +318,12 @@ class Cards extends Component {
         this.props.action.cardAction.AddDueDate(ddData)
         this.toggled()
     }
+    handleDueDateDel=()=>{
+            
+        this.props.action.cardAction.DeleteDuedate(this.props.idcards)
+        this.toggled()
 
+    }
     render() {
         const userName = localStorage.getItem("userName");
         let singleCard = []
@@ -392,10 +396,9 @@ class Cards extends Component {
         } else {
             boardlist = <option >No Lists</option>
         }
-
+        
         return (
             <div>
-
                 <Modal open={this.props.open} onClose={this.props.onClose} idcards={this.props.idcards} center>
                     <div className="cmMainDiv" >
                         <div className="cmSubDiv1">
@@ -406,8 +409,10 @@ class Cards extends Component {
                                 {(singlelist.length > 0) ?
                                     singlelist[0].lName
                                     : (this.props.archived[0] ? this.props.archived[0].lName : "")}</a></div>
-
-                                    <div>DD</div>
+                                    <div className="cmsubFont2" onClick={this.toggled}>
+                                    {this.props.duedateData.length>0?
+                                        "Due Date "
+                                        +this.props.duedateData[0].date+" at "+this.props.duedateData[0].time:""}</div>
                             <div>
                                 <div className="cmTitle"><img alt="" height="30px" width="30px" src={description} style={{ marginRight: "5px" }} />Description</div>
                                 {this.state.show ?
@@ -435,7 +440,6 @@ class Cards extends Component {
                                                 style={{ marginBottom: "1%", backgroundColor: "#5aac44", boxShadow: "0 1px 0 0 #3f6f21", border: "none", color: "#fff", fontWeight: "bold", marginLeft: "35px", borderRadius: "6%", padding: "0.5% 1.5%", marginTop: "5px" }}>{" "}Save{" "} </button>
                                             <img alt="" height="23px" width="23px" src={close} style={{ marginLeft: "3px" }} onClick={this.handleCancel.bind(this)} /></form>)
                                     )
-
                                     :
                                     (this.props.cardDetails.length > 0 ?
                                         <label type="text" onClick={this.handleEdit()}><div className="cmAddDesc"> {this.props.cardDetails[0].cDesc}</div></label>
@@ -495,7 +499,7 @@ class Cards extends Component {
                                                         <div className="column">
                                                             <FormGroup>
                                                                 <div className="timelabel"><Label >Time</Label></div>
-                                                                <TimeField value={this.state.time} style={{ padding: "3%", marginLeft: "5%", width: "90%" }} onChange={this.onTimeChange} />
+                                                                <TimeField value={this.state.time} style={{ padding: "3%", marginLeft: "9%", width: "90%" }} onChange={this.onTimeChange} />
                                                             </FormGroup>
                                                         </div>
 
@@ -522,7 +526,7 @@ class Cards extends Component {
                                                     <div className="reText">Reminders will be sent to all members and watchers of this card.</div>
                                                     <div style={{ paddingLeft: "5%",marginTop:"1%" }} >
                                                     <Button onClick={this.handleDueDatesub.bind(this)} color="success" style={{padding:"1% 4%",maxHeight:"30px",fontSize:"15px",fontWeight:"bold",alignContent:"center"}}>Save</Button>
-                                                    <Button color="danger" style={{float:"right",padding:"1% 4%",maxHeight:"30px",fontSize:"15px",fontWeight:"bold",alignContent:"center",marginRight:"3%"}}>Remove</Button>
+                                                    <Button  onClick={this.handleDueDateDel.bind(this)} color="danger" style={{float:"right",padding:"1% 4%",maxHeight:"30px",fontSize:"15px",fontWeight:"bold",alignContent:"center",marginRight:"3%"}}>Remove</Button>
 
                                                     </div>
                                                 </FormGroup>
@@ -593,7 +597,8 @@ const mapStateToProps = (state) => {
         cardDetails: state.CardsReducer.cardDetails,
         archived: state.CardsReducer.archived,
         allBoardsData: state.BoardReducer.allBoards,
-        allListData: state.ListsReducer.allList
+        allListData: state.ListsReducer.allList,
+        duedateData:state.CardsReducer.duedate
     }
 }
 const mapDispatchToProps = (dispatch) => ({

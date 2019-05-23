@@ -31,10 +31,11 @@ div.divstyleboard:hover {
     border-radius: 7%
 }
 div.boardnav{
-    font-size: 120%;
+    font-size: 110%;
     align-self: center;
     color: white;
-    margin:1%;
+    background: #5DA0C7;
+    border-radius: 4%;
     padding: 2%;
     min-width: fit-content;
     width: max-content
@@ -44,8 +45,6 @@ div.boardnav{
     opacity: 0.4;
     border:none;
     cursor: pointer;
-    font-variant-caps: titling-caps;
-    border-radius: 7%
  }
  Form.formclass{
     padding: 4%;

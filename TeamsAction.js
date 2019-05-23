@@ -4,7 +4,6 @@ export const FETCH_TEAM = "FETCH_TEAM";
 export const FAILED = "FAILED";
 
 export const AddTeam = (data, history) => {
-    const id = localStorage.getItem("iduser")
     return (dispatch) => {
         authService.teams(data)
             .then((response) => {
@@ -16,8 +15,12 @@ export const AddTeam = (data, history) => {
                         data: response.data,
                         signup: response.data.signup
                     });
+                    if(response.data[0].idteams!==undefined){
+                        let id=response.data[0].idteams
+                        history.push("/" + id + '/teamboards')
                 }
-                history.push("/" + id + '/teams')
+                }
+              
             })
             .catch((error) => {
                 if (error) {

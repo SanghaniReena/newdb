@@ -109,11 +109,13 @@ class NavbarInside extends Component {
       tName: this.state.tName,
       tDesc: this.state.tDesc
     }
-    
     const { history } = this.props;
-
     this.props.action.teamAction.AddTeam(tData, history)
 
+  }
+  handleProfileClick=()=>{
+    const userid=localStorage.getItem("iduser")
+    this.props.history.push("/profile/"+userid)
   }
   render() {
     const uname = localStorage.getItem("userName")
@@ -205,6 +207,9 @@ class NavbarInside extends Component {
                     {uname}
                   </DropdownToggle>
                   <DropdownMenu right>
+                  <DropdownItem onClick={this.handleProfileClick.bind(this)}>
+                      Profile
+                    </DropdownItem>
                     <DropdownItem onClick={this.handleLogout}>
                       Logout
                     </DropdownItem>

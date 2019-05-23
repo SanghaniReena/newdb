@@ -14,6 +14,8 @@ export const DELETE_CARD_COMM="DELETE_CARD_COMM"
 export const SENDTB_CARD="SENDTB_CARD";
 export const MOVE_CARD="MOVE_CARD";
 export const ADD_DUEDATE="ADD_DUEDATE";
+export const FETCH_DUEDATE="FETCH_DUEDATE"
+export const DELETE_DUEDATE="DELETE_DUEDATE"
 export const AddCard = (data) => {
     return (dispatch) => {
         authService.cards(data)
@@ -285,6 +287,44 @@ export const AddDueDate = (data) => {
                     dispatch({
                         type: ADD_DUEDATE,
                         data: response.data
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+export const FetchDuedate = (id) => {
+    return (dispatch) => {
+        authService.fetchduedate(id)
+            .then((response) => {
+
+                if (response.status === 200) {
+                    dispatch({
+                        type: FETCH_DUEDATE,
+                        data: response.data
+                    });
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    dispatch({ type: FAILED, data: { error_msg: error.response.data.error } });
+                }
+            })
+    }
+}
+export const DeleteDuedate = (id) => {
+    
+    return (dispatch) => {
+        authService.delduedate(id)
+            .then((response) => {
+                if (response.status === 200) {
+                    dispatch({
+                        type: DELETE_DUEDATE,
+                        data: response.data,
                     });
                 }
             })

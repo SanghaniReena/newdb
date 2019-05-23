@@ -15,8 +15,7 @@ export const AddBoard = (data,history) => {
                         type: Add_BOARD,
                         data: response.data,
                     });
-                    console.log("*****",response.data)
-                    console.log("*****", response.data[0].idboards)
+                   
                    
                     if(response.data[0].idboards!==undefined){
                         history.push("/board/" + response.data[0].idboards)}

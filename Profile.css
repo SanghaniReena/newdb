@@ -1,0 +1,79 @@
+div.profileUpr{
+    height:200px;
+    background: #f4f5f7;
+}
+div.profileRound{
+    background-color: #dfe1e6;
+    border-radius: 25em;
+    cursor: default;
+    display: block;
+    flex: 0 0 85px;
+    height: 85px;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 85px;
+    z-index: 0;
+}
+div.mainprodiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 650px;
+
+    padding: 32px;
+    position: relative;
+
+}
+span.spanpro{
+    font-weight: 700;
+    text-align: center;
+    left: 0;
+    font-size: 50px;
+    line-height: 86px;
+    flex-direction: column;
+
+    position: absolute;
+    min-width: -webkit-fill-available;
+}
+span.spanpro2{
+    vertical-align: center;
+}
+a.apro{
+    color: #172b4d;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Droid Sans,Helvetica Neue,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+}
+div.proDetails{
+    max-width: fit-content;
+        flex-direction: column;
+        margin-left: 6%;
+
+}
+h1{
+    font-size: 24px;
+    line-height: 28px;
+    margin: 0 0 12px;
+    font-weight: bold
+}
+button.proBtn{
+    border: none;
+    min-width: max-content;
+    font-weight: 500;
+    background: #ebecf0;
+    padding: 4% 6%;
+    border-radius: 4%;
+    
+    box-shadow: grey 1px 1px 1px;
+}
+button.proBtn:hover{
+    background: #dfe1e6;
+
+}

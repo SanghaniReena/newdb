@@ -167,15 +167,14 @@ class Navbd extends Component {
                         </ModalFooter>
                     </Modal>
 
-                    <Navbar expand="md" style={{ backgroundColor: "#026AA7", fontWeight: "bold" }}>
-                        <a href="/" style={{ background: "white", opacity: "0.5", borderRadius: "9%", padding: "0.5%" }}><img height="25px" width="80px" src={trelloIcon} alt=""></img></a>
+                    <Navbar expand="md" style={{ backgroundColor: "#026AA7", fontWeight: "bold", padding:"0.2% 0% 0.2% 0%",fontSize:"18px" }}>
                         <div className="navbord" onClick={this.handlnavboardClick.bind(this)}>Boards</div>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
                                 <UncontrolledDropdown nav inNavbar>
                                     <DropdownToggle nav style={{ color: "white", fontWeight: "bold", background: "white", opacity: "0.5", borderRadius: "9%" }}>
-                                        <img height="28px" width="28px" src={plus} alt="" style={{ fill : "white"}}></img>
+                                        <img height="25px" width="25px" src={plus} alt="" style={{ fill : "white"}}></img>
                                     </DropdownToggle>
                                     <DropdownMenu right>
                                         <DropdownItem style={{ textAlign: "center" }} header>Create</DropdownItem>

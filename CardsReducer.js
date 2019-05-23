@@ -1,10 +1,10 @@
-import { ADD_CARD, ADD_DUEDATE,FAILED, ARCHIVE_CARD, DELETE_CARD_COMM, MOVE_CARD, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
+import { ADD_CARD, DELETE_DUEDATE,FETCH_DUEDATE, ADD_DUEDATE, FAILED, ARCHIVE_CARD, DELETE_CARD_COMM, MOVE_CARD, SENDTB_CARD, FETCH_CARD, EDITD_CARD, ADD_COMMENT, FETCH_CARD_DETAILS, ADD_DESC, FETCH_CARD_COMMENTS, EDIT_DESC } from "../action/CardsAction"
 const INITIAL_STATE = {
     cards: [],
     cardDetails: [],
     cardComment: [],
     archived: [],
-    duedate:[]
+    duedate: []
 }
 const handleCards = (state = INITIAL_STATE, action) => {
 
@@ -22,7 +22,7 @@ const handleCards = (state = INITIAL_STATE, action) => {
 
             }
         case MOVE_CARD: {
-            
+
             let ind
             for (let i = 0; i < state.cards.length; i++) {
                 if (state.cards[i].idcards === action.data[0].idcards) {
@@ -103,7 +103,8 @@ const handleCards = (state = INITIAL_STATE, action) => {
                 }
                 let newc = state.cardComment
                 newc.splice(index, 1)
-                return Object.assign({}, state, { cardComment:newc })
+                const newdata = state.cardComment.concat();
+                return Object.assign({}, state, { cardComment: newdata })
             }
         case FETCH_CARD_DETAILS:
             {
@@ -118,9 +119,28 @@ const handleCards = (state = INITIAL_STATE, action) => {
             {
                 return Object.assign({}, state, { error_msg: action.data.error_msg });
             }
-        case ADD_DUEDATE:{
-            const newdata = state.duedate.concat(action.data[0]);
-            return Object.assign({}, state, { duedate: newdata })
+        case ADD_DUEDATE: {
+            if (state.duedate.length === 0) {
+                const newdata = state.duedate.concat(action.data[0]);
+                return Object.assign({}, state, { duedate: newdata })
+            }
+            else {
+                state.duedate.splice(0, 1)
+                const newdata = state.duedate.concat(action.data[0]);
+                return Object.assign({}, state, { duedate: newdata })
+            }
+        }
+
+        case FETCH_DUEDATE: {
+            return Object.assign({}, state, { duedate: action.data })
+        }
+        case DELETE_DUEDATE:
+        {
+           
+            state.duedate.splice(0, 1)
+            const newdata = state.duedate.concat();
+                return Object.assign({}, state, { duedate: newdata })
+           
         }
         default:
             return state;

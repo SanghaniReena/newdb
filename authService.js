@@ -93,3 +93,9 @@ export function deletecomm(id) {
 export function addduedate(data) {
     return BaseService.post("/duedate",data);
 }
+export function fetchduedate(id) {
+    return BaseService.get("/"+id+"/fetchdd");
+}
+export function delduedate(id) {
+    return BaseService.delete("/"+id+"/deldd");
+}
